@@ -1,0 +1,65 @@
+<!-- MAIN WINDOW XAML (UI, LAYOUT, CONTROLLERS) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:components="clr-namespace:RetroAchievCollection.Views.Components"
+        x:Class="RetroAchievCollection.Views.MainWindow"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Title="RetroAchievCollection"
+        x:CompileBindings="False">
+    <Window.Styles>
+        <Style Selector="DockPanel">
+            <Setter Property="Background" Value="#2A2A2A" />
+        </Style>
+
+        <Style Selector="MenuItem">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#4a4a4a" />
+        </Style>
+
+        <Style Selector="MenuItem:pointerover /template/ Border#PART_LayoutRoot">
+            <Setter Property="Background" Value="#707070" />
+        </Style>
+
+        <Style Selector="MenuItem:pointerover /template/ ContentPresenter#PART_HeaderPresenter">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="MenuItem > Separator">
+            <Setter Property="Background" Value="#404040" />
+        </Style>
+
+        <Style Selector="MenuItem /template/ Popup#PART_Popup > Border > ScrollViewer > DockPanel">
+            <Setter Property="Background" Value="#4a4a4a" />
+        </Style>
+    </Window.Styles>
+
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Background="#4a4a4a">
+            <Menu HorizontalAlignment="Right">
+                <MenuItem>
+                    <MenuItem.Header>
+                        <PathIcon Data="{StaticResource cog_regular}"
+                                  Foreground="White" 
+                                  VerticalAlignment="Center" />
+                    </MenuItem.Header>
+
+                    <MenuItem Header="Credentials" />
+                    <Separator />
+                    <MenuItem Header="Exit" />
+                </MenuItem>
+            </Menu>
+        </Grid>
+
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Consoles}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <components:ConsoleCard DataContext="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

@@ -1,0 +1,87 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="using:RetroAchievCollection.Models"
+             x:Class="RetroAchievCollection.Views.Components.ConsoleCard"
+             x:DataType="models:ConsoleModel"
+             x:CompileBindings="true">
+
+    <Grid Margin="5, 8"
+          VerticalAlignment="Stretch"
+          HorizontalAlignment="Stretch">
+
+        <Grid.Styles>
+            <Style Selector="Border">
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="Background" Value="#4a4a4a" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+
+            <Style Selector="Grid > Border.main-border">
+                <Setter Property="Height" Value="100" />
+                <Setter Property="BorderBrush" Value="Gray" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="BorderThickness" Value="2" />
+            </Style>
+
+            <Style Selector="TextBlock">
+                <Setter Property="Foreground" Value="White" />
+            </Style>
+        </Grid.Styles>
+
+        <Border Classes="main-border">
+            <Grid ColumnDefinitions="100, *, 100">
+
+                <Border Grid.Column="0" Padding="2, 2, 6, 2">
+                    <StackPanel Background="White">
+                        <Image Source="{Binding ConsoleImage}" 
+                               Stretch="UniformToFill"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1"
+                        BorderBrush="Gray"
+                        BorderThickness="2 0">
+
+                    <Grid ColumnDefinitions="100, *"
+                          RowDefinitions="20, 20, 20, 20"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left">
+
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text="Console: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1">
+                            <TextBlock Text="{Binding ConsoleName}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0">
+                            <TextBlock Text="Company: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="{Binding Company}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Grid.Column="0">
+                            <TextBlock Text="Console: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1">
+                            <TextBlock Text="{Binding Company}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Grid.Column="0">
+                            <TextBlock Text="Console: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="1">
+                            <TextBlock Text="{Binding Company}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2"></Border>
+
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
