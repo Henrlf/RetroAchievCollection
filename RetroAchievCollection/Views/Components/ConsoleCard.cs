@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace RetroAchievCollection.Views.Components;
@@ -31,10 +32,18 @@ public partial class ConsoleCard : UserControl
         get => GetValue(ConsoleNameProperty);
         set => SetValue(ConsoleNameProperty, value);
     }
-    
+
     public string Company
     {
         get => GetValue(CompanyProperty);
         set => SetValue(CompanyProperty, value);
+    }
+
+    private void SeeAchievementsCommand(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn || btn.Tag is not int consoleId || consoleId == 0)
+        {
+            return;
+        }
     }
 }

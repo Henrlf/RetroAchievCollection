@@ -1,6 +1,6 @@
-using System.Collections.ObjectModel;
 using Avalonia.Controls;
-using RetroAchievCollection.Models;
+using Avalonia.Markup.Xaml;
+using RetroAchievCollection.ViewModels;
 
 namespace RetroAchievCollection.Views;
 
@@ -10,19 +10,12 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
-        DataContext = new
-        {
-            Consoles = getConsoles()
-        };
+        
+        DataContext = new MainWindowViewModel();
     }
-
-    private ObservableCollection<ConsoleModel> getConsoles()
+    
+    private void InitializeComponent()
     {
-        return new ObservableCollection<ConsoleModel>
-        {
-            new ConsoleModel {ConsoleImage = "https://img.cdndsgni.com/preview/11908070.jpg", ConsoleName = "Nintendo Wii", Company = "Nintendo"},
-            new ConsoleModel {ConsoleImage = "https://img.cdndsgni.com/preview/11908070.jpg", ConsoleName = "Super Nintendo", Company = "Nintendo"},
-        };
+        AvaloniaXamlLoader.Load(this);
     }
 }
