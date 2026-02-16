@@ -2,14 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:components="clr-namespace:RetroAchievCollection.Views.Components"
              xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="RetroAchievCollection.Views.ConsoleView"
-             x:DataType="vm:ConsoleViewModel"
+             xmlns:components="clr-namespace:RetroAchievCollection.Views.Components"
+             mc:Ignorable="d"
+             x:Class="RetroAchievCollection.Views.GameView"
+             x:DataType="vm:GameViewModel"
              x:CompileBindings="True">
 
-    <Grid RowDefinitions="50, Auto, *">
+    <Grid RowDefinitions="50, Auto, *"
+          ColumnDefinitions="*, *">
         <Grid.Styles>
             <Style Selector="Border.border-button">
                 <Setter Property="HorizontalAlignment" Value="Right" />
@@ -23,26 +24,33 @@
                 <Setter Property="BorderThickness" Value="1" />
             </Style>
 
-            <Style Selector="Button.sync-button">
+            <Style Selector="Button.menu-btn">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="VerticalAlignment" Value="Stretch" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
         </Grid.Styles>
 
-        <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
-            <Button ToolTip.Tip="Synchronize Information" Classes="sync-button">
+        <Border Grid.Row="0" Grid.Column="0" Classes="border-button" HorizontalAlignment="Left">
+            <Button ToolTip.Tip="Show Consoles" Classes="menu-btn"
+                    Command="{Binding LoadConsolesView}">
+                <PathIcon Data="{StaticResource left_arrow}" Foreground="White" />
+            </Button>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="1" Classes="border-button">
+            <Button ToolTip.Tip="Synchronize Achievements" Classes="menu-btn">
                 <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
             </Button>
         </Border>
 
-        <Separator Grid.Row="1" Margin="10, 0" />
+        <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 0" />
 
-        <ScrollViewer Grid.Row="2">
-            <ItemsControl ItemsSource="{Binding Consoles}">
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <ItemsControl ItemsSource="{Binding Games}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <components:ConsoleCard DataContext="{Binding}" Margin="10, 14, 10, 0" />
+                        <components:GameCard DataContext="{Binding}" Margin="10, 14, 10, 0" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

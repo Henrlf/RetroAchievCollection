@@ -18,24 +18,20 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Assets\Icons\" />
       <Folder Include="Services\" />
       <AvaloniaResource Include="Assets\Icons\*" />
+      <AvaloniaResource Include="Assets\*" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Update="Views\MainWindow.axaml.cs">
         <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Components\ConsoleCard.cs">
-        <DependentUpon>ConsoleCard.axaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\ConsoleView.cs">
-        <DependentUpon>ConsoleView.axaml</DependentUpon>
       </Compile>
     </ItemGroup>
 </Project>

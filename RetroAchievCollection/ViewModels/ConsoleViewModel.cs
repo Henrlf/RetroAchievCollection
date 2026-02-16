@@ -5,22 +5,24 @@ namespace RetroAchievCollection.ViewModels;
 
 public partial class ConsoleViewModel : BaseViewModel
 {
-    private readonly MainWindowViewModel _mainVm;
-
-    [ObservableProperty]
+    [ObservableProperty] 
     private ObservableCollection<ConsoleCardViewModel> _consoles = new();
 
-    public ConsoleViewModel(MainWindowViewModel mainVm)
+    public ConsoleViewModel(MainWindowViewModel mainVm) : base(mainVm)
     {
-        _mainVm = mainVm;
         LoadConsoles();
     }
 
     private void LoadConsoles()
     {
         Consoles.Clear();
-        
-        Consoles.Add(new ConsoleCardViewModel(_mainVm)
+
+        if (_mainVm == null)
+        {
+            return;
+        }
+
+        Consoles.Add(new ConsoleCardViewModel(_mainVm.LoadGameView)
         {
             Id = 1,
             Name = "Nintendo Wii",
@@ -28,7 +30,7 @@ public partial class ConsoleViewModel : BaseViewModel
             ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg"
         });
 
-        Consoles.Add(new ConsoleCardViewModel(_mainVm)
+        Consoles.Add(new ConsoleCardViewModel(_mainVm.LoadGameView)
         {
             Id = 2,
             Name = "Super Nintendo",

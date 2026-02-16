@@ -1,30 +1,18 @@
-﻿namespace RetroAchievCollection.ViewModels;
+﻿using CommunityToolkit.Mvvm.Input;
+
+namespace RetroAchievCollection.ViewModels;
 
 public partial class ConsoleCardViewModel : BaseViewModel
 {
     public int Id {get; set;} = 0;
     public string Name {get; set;} = "";
-    public string ImagePath {get; set;} = "";
     public string Company {get; set;} = "";
+    public string ImagePath {get; set;} = "";
 
-    private readonly MainWindowViewModel _mainVm;
+    public IRelayCommand? LoadGameViewCommand {get; set;}
 
-    public ConsoleCardViewModel(MainWindowViewModel mainVm)
+    public ConsoleCardViewModel(IRelayCommand loadGameViewCommand)
     {
-        _mainVm = mainVm;
+        LoadGameViewCommand = loadGameViewCommand;
     }
-
-    public ConsoleCardViewModel(int id, string name, string imagePath, MainWindowViewModel mainVm)
-    {
-        Id = id;
-        Name = name;
-        ImagePath = imagePath;
-        _mainVm = mainVm;
-    }
-
-    // [RelayCommand]
-    // private void ViewGames()
-    // {
-    //     _mainVm.ShowAchievements(Id, Name);
-    // }
 }

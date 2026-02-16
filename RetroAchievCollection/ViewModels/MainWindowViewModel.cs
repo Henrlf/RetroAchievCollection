@@ -1,24 +1,40 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace RetroAchievCollection.ViewModels;
 
-public partial class MainWindowViewModel : BaseViewModel
+public partial class MainWindowViewModel : ObservableObject
 {
-    [ObservableProperty]
+    [ObservableProperty] 
     private object? _currentView;
+
+    public IRelayCommand LoadConsoleView {get;}
+    public IRelayCommand LoadGameView {get;}
 
     public MainWindowViewModel()
     {
-        ShowConsoles();
+        LoadConsoleView = new RelayCommand(ShowConsolesView);
+        LoadGameView = new RelayCommand(ShowGameView);
+
+        ShowConsolesView();
     }
-    
-    public void ShowConsoles()
+
+    public void ShowConsolesView()
     {
+        Console.WriteLine(CurrentView?.GetType().Name);
+
         CurrentView = new ConsoleViewModel(this);
+
+        Console.WriteLine(CurrentView?.GetType().Name);
     }
-    
-    // public void ShowAchievements(int consoleId, string consoleName)
-    // {
-    //     CurrentView = new GamesViewModel(consoleId, consoleName);
-    // }
+
+    public void ShowGameView()
+    {
+        Console.WriteLine(CurrentView?.GetType().Name);
+
+        CurrentView = new GameViewModel(this);
+
+        Console.WriteLine(CurrentView?.GetType().Name);
+    }
 }

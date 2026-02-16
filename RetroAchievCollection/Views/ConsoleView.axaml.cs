@@ -8,7 +8,7 @@ public partial class ConsoleView : UserControl
     public ConsoleView()
     {
         InitializeComponent();
-        
+
         if (DataContext == null)
         {
             DataContext = new ConsoleViewModel(new MainWindowViewModel());

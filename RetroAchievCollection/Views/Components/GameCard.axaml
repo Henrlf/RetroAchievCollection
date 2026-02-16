@@ -1,0 +1,155 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels"
+             xmlns:models="clr-namespace:RetroAchievCollection.Models"
+             mc:Ignorable="d"
+             x:Class="RetroAchievCollection.Views.Components.GameCard"
+             x:DataType="vm:GameCardViewModel"
+             x:CompileBindings="True">
+
+    <Expander VerticalAlignment="Stretch"
+              HorizontalAlignment="Stretch"
+              BorderBrush="Gray"
+              BorderThickness="2">
+
+        <Expander.Resources>
+            <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="#4a4a4a" />
+            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver" Color="#4a4a4a" />
+            <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed" Color="#4a4a4a" />
+            <Thickness x:Key="ExpanderHeaderPadding">0</Thickness>
+        </Expander.Resources>
+
+        <Expander.Header>
+            <Grid ColumnDefinitions="100, *, 150">
+                <Grid.Styles>
+                    <Style Selector="Border.main-borders">
+                        <Setter Property="Padding" Value="6" />
+                        <Setter Property="BorderBrush" Value="Gray" />
+                        <Setter Property="BorderThickness" Value="0" />
+                    </Style>
+                </Grid.Styles>
+
+                <Border Grid.Column="0" Classes="main-borders" BorderThickness="0 , 0, 2 ,0">
+                    <StackPanel Background="White">
+                        <Image Source="{Binding GameImage}"
+                               Stretch="UniformToFill"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Classes="main-borders">
+                    <Grid ColumnDefinitions="105, *"
+                          RowDefinitions="20, 20, 20, 20"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Stretch">
+
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text="Name: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1">
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0">
+                            <TextBlock Text="Release Date: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="{Binding ReleaseDate}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2">
+                    <Grid VerticalAlignment="Bottom"
+                          HorizontalAlignment="Stretch">
+                        <Grid RowDefinitions="*, *">
+                            <Grid.Styles>
+                                <Style Selector="Border.option-border">
+                                    <Setter Property="Margin" Value="0, 5" />
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                    <Setter Property="Background" Value="Gray" />
+                                    <Setter Property="Height" Value="10" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="CornerRadius" Value="1" />
+                                </Style>
+                            </Grid.Styles>
+
+                            <Border Grid.Row="0" HorizontalAlignment="Right">
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}/{1}">
+                                            <Binding Path="CompletedAchievements" />
+                                            <Binding Path="TotalAchievements" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Border>
+
+                            <Border Grid.Row="1" Classes="option-border">
+                                <Border Classes="option-border"
+                                        HorizontalAlignment="Left"
+                                        Background="Orange"
+                                        Width="{Binding AchievProgressPercentage}" />
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Expander.Header>
+
+        <ScrollViewer MaxHeight="400">
+            <ItemsControl ItemsSource="{Binding Achievements}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="models:AchievementModel">
+                        <Grid RowDefinitions="*, *"
+                              ColumnDefinitions="80, *, 100"
+                              HorizontalAlignment="Stretch"
+                              Background="Transparent">
+
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Padding="6">
+                                <StackPanel Background="White">
+                                    <Image Source="{Binding ImagePath}"
+                                           Stretch="UniformToFill"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Stretch" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    BorderBrush="Gray"
+                                    BorderThickness="2 0"
+                                    Padding="6">
+
+                                <Grid RowDefinitions="20, 40"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Stretch">
+
+                                    <StackPanel Grid.Row="0">
+                                        <TextBlock Text="{Binding Name}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1">
+                                        <TextBlock Text="{Binding Description}" FontSize="12" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <Border Grid.Row="0" Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Padding="6">
+                                <PathIcon Data="{StaticResource play_regular}" Foreground="Green" />
+                            </Border>
+
+                            <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Expander>
+</UserControl>

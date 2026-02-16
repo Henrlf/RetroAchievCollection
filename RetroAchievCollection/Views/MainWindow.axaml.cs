@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using RetroAchievCollection.ViewModels;
 
 namespace RetroAchievCollection.Views;
@@ -12,10 +11,5 @@ public partial class MainWindow : Window
         InitializeComponent();
         
         DataContext = new MainWindowViewModel();
-    }
-    
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 }

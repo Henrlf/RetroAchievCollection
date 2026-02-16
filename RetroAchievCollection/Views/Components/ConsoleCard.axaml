@@ -1,10 +1,13 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:viewModels="clr-namespace:RetroAchievCollection.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels"
+             mc:Ignorable="d"
              x:Class="RetroAchievCollection.Views.Components.ConsoleCard"
-             x:DataType="viewModels:ConsoleCardViewModel"
+             x:DataType="vm:ConsoleCardViewModel"
              x:CompileBindings="true">
-
+    
     <Grid VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch">
 
@@ -29,7 +32,6 @@
 
         <Border Classes="main-border">
             <Grid ColumnDefinitions="100, *, Auto">
-
                 <Border Grid.Column="0" Padding="2, 2, 6, 2">
                     <StackPanel Background="White">
                         <Image Source="{Binding ImagePath}"
@@ -42,7 +44,6 @@
                 <Border Grid.Column="1"
                         BorderBrush="Gray"
                         BorderThickness="2 0">
-
                     <Grid ColumnDefinitions="100, *"
                           RowDefinitions="20, 20, 20, 20"
                           VerticalAlignment="Center"
@@ -111,9 +112,8 @@
                         </Border>
 
                         <Border Grid.Column="1" Classes="option-border">
-                            <Button ToolTip.Tip="See Achievements"
-                                    Click="SeeAchievementsCommand"
-                                    Tag="{Binding Id}">
+                            <Button ToolTip.Tip="See Games"
+                                    Command="{Binding LoadGameViewCommand}">
                                 <PathIcon Data="{StaticResource star_regular}" Foreground="Orange" />
                             </Button>
                         </Border>
