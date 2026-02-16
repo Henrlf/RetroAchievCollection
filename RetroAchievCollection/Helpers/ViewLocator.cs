@@ -11,7 +11,6 @@ public class ViewLocator : IDataTemplate
     {
         if (data is null)
         {
-            Console.WriteLine("Sem DATA");
             return new TextBlock {Text = "Null view model"};
         }
 
@@ -22,21 +21,14 @@ public class ViewLocator : IDataTemplate
 
         if (type == null)
         {
-            Console.WriteLine($"View NÃO encontrada: {name}");
             return new TextBlock {Text = "Not Found: " + name};
         }
 
-        Console.WriteLine($"View encontrada: {name}");
-        
         return (Control)Activator.CreateInstance(type)!;
     }
 
     public bool Match(object? data)
     {
-        var matches = data is BaseViewModel;
-        
-        Console.WriteLine($"ViewLocator.Match chamado para {data?.GetType().Name ?? "null"} -> retorna {matches}");
-        
-        return matches;
+        return data is BaseViewModel;
     }
 }

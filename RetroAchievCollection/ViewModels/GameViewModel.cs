@@ -35,7 +35,7 @@ public partial class GameViewModel : BaseViewModel
             return;
         }
 
-        Games.Add(new GameCardViewModel("https://picsum.photos/200/300")
+        Games.Add(new GameCardViewModel
         {
             Id = 1,
             Name = "Super Mario",
@@ -45,7 +45,7 @@ public partial class GameViewModel : BaseViewModel
             CompletedAchievements = 100,
         });
 
-        Games.Add(new GameCardViewModel("https://picsum.photos/200/300")
+        Games.Add(new GameCardViewModel
         {
             Id = 2,
             Name = "Super Mario",
@@ -55,7 +55,7 @@ public partial class GameViewModel : BaseViewModel
             CompletedAchievements = 100,
         });
 
-        Games.Add(new GameCardViewModel("https://picsum.photos/200/300")
+        Games.Add(new GameCardViewModel
         {
             Id = 3,
             Name = "Super Mario",

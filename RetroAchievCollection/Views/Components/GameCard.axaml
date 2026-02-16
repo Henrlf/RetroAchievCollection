@@ -28,16 +28,19 @@
                         <Setter Property="Padding" Value="6" />
                         <Setter Property="BorderBrush" Value="Gray" />
                         <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </Grid.Styles>
 
-                <Border Grid.Column="0" Classes="main-borders" BorderThickness="0 , 0, 2 ,0">
-                    <StackPanel Background="White">
-                        <Image Source="{Binding GameImage}"
-                               Stretch="UniformToFill"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch" />
-                    </StackPanel>
+                <Border Grid.Column="0" Classes="main-borders"
+                        BorderThickness="0 , 0, 2 ,0"
+                        Background="Transparent">
+                    <!-- Source="{Binding GameImage}" -->
+                    <Image Source="avares://RetroAchievCollection/Assets/super_mario.png"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch" />
                 </Border>
 
                 <Border Grid.Column="1" Classes="main-borders">
@@ -110,10 +113,14 @@
                               HorizontalAlignment="Stretch"
                               Background="Transparent">
 
-                            <Border Grid.Row="0" Grid.Column="0"
-                                    VerticalAlignment="Center"
-                                    Padding="6">
-                                <StackPanel Background="White">
+                            <Grid.Styles>
+                                <Style Selector="Border">
+                                    <Setter Property="Padding" Value="6" />
+                                </Style>
+                            </Grid.Styles>
+
+                            <Border Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">
+                                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White">
                                     <Image Source="{Binding ImagePath}"
                                            Stretch="UniformToFill"
                                            HorizontalAlignment="Stretch"
@@ -123,11 +130,8 @@
 
                             <Border Grid.Row="0" Grid.Column="1"
                                     BorderBrush="Gray"
-                                    BorderThickness="2 0"
-                                    Padding="6">
-
+                                    BorderThickness="2 0">
                                 <Grid RowDefinitions="20, 40"
-                                      VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch">
 
                                     <StackPanel Grid.Row="0">
@@ -139,10 +143,24 @@
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="0" Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    Padding="6">
-                                <PathIcon Data="{StaticResource play_regular}" Foreground="Green" />
+                            <Border Grid.Row="0" Grid.Column="2" >
+                                <PathIcon>
+                                    <PathIcon.Styles>
+                                        <Style Selector="PathIcon">
+                                            <Setter Property="Data" Value="{StaticResource star_regular}" />
+                                            <Setter Property="Foreground" Value="Gray" />
+                                        </Style>
+
+                                        <Style Selector="PathIcon[Tag=True]">
+                                            <Setter Property="Data" Value="{StaticResource star_regular_filled}" />
+                                            <Setter Property="Foreground" Value="Gold" />
+                                        </Style>
+                                    </PathIcon.Styles>
+
+                                    <PathIcon.Tag>
+                                        <Binding Path="Completed" />
+                                    </PathIcon.Tag>
+                                </PathIcon>
                             </Border>
 
                             <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" />

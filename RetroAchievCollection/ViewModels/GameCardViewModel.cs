@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -16,12 +15,11 @@ public partial class GameCardViewModel : BaseViewModel
     public int AchievProgressPercentage {get; set;} = 50;
     public int TotalAchievements {get; set;} = 10;
     public int CompletedAchievements {get; set;} = 10;
+    public string GameImage {get; set;} = "";
     public Collection<AchievementModel> Achievements {get; set;} = new();
-    public Task<Bitmap?> GameImage {get;}
-
-    public GameCardViewModel(string imageUrl)
+    
+    public GameCardViewModel()
     {
-        GameImage = LoadImageAsync(imageUrl);
         LoadAchievements();
     }
 
@@ -53,7 +51,7 @@ public partial class GameCardViewModel : BaseViewModel
             Name = "Achievement 3",
             Description = "Descrição Achievement 5",
             ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg",
-            Completed = true,
+            Completed = false,
         });
 
         Achievements.Add(new AchievementModel
@@ -74,7 +72,7 @@ public partial class GameCardViewModel : BaseViewModel
             Completed = true,
         });
     }
-    
+
     private static async Task<Bitmap?> LoadImageAsync(string url)
     {
         if (string.IsNullOrWhiteSpace(url))

@@ -6,19 +6,20 @@
              mc:Ignorable="d"
              x:Class="RetroAchievCollection.Views.Components.ConsoleCard"
              x:DataType="vm:ConsoleCardViewModel"
-             x:CompileBindings="true">
-    
+             x:CompileBindings="True">
+
     <Grid VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch">
 
         <Grid.Styles>
             <Style Selector="Border">
-                <Setter Property="Padding" Value="5" />
+                <Setter Property="Padding" Value="5, 0" />
                 <Setter Property="Background" Value="#4a4a4a" />
                 <Setter Property="BorderThickness" Value="0" />
             </Style>
 
             <Style Selector="Grid > Border.main-border">
+                <Setter Property="Padding" Value="0, 5" />
                 <Setter Property="Height" Value="100" />
                 <Setter Property="BorderBrush" Value="Gray" />
                 <Setter Property="CornerRadius" Value="8" />
@@ -32,13 +33,12 @@
 
         <Border Classes="main-border">
             <Grid ColumnDefinitions="100, *, Auto">
-                <Border Grid.Column="0" Padding="2, 2, 6, 2">
-                    <StackPanel Background="White">
-                        <Image Source="{Binding ImagePath}"
-                               Stretch="UniformToFill"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch" />
-                    </StackPanel>
+                <Border Grid.Column="0"  Background="Transparent" >
+                    <Image Source="avares://RetroAchievCollection/Assets/nintendo_switch.png"
+                           Stretch="UniformToFill"
+                           StretchDirection="Both"
+                           VerticalAlignment="Stretch"
+                           HorizontalAlignment="Stretch" />
                 </Border>
 
                 <Border Grid.Column="1"
