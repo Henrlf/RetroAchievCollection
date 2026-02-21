@@ -35,7 +35,8 @@
                                   VerticalAlignment="Center" />
                     </MenuItem.Header>
 
-                    <MenuItem Header="Credentials" />
+                    <MenuItem Header="Credentials" 
+                              Command="{Binding ShowConfigurations}"/>
                     <Separator />
                     <MenuItem Header="Exit" />
                 </MenuItem>

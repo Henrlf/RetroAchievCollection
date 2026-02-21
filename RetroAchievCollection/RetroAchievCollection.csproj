@@ -22,8 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Assets\Consoles\" />
       <Folder Include="Assets\Icons\" />
-      <Folder Include="Services\" />
       <AvaloniaResource Include="Assets\Icons\*" />
       <AvaloniaResource Include="Assets\*" />
     </ItemGroup>

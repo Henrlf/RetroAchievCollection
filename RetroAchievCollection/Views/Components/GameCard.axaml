@@ -36,14 +36,14 @@
                 <Border Grid.Column="0" Classes="main-borders"
                         BorderThickness="0 , 0, 2 ,0"
                         Background="Transparent">
-                    <!-- Source="{Binding GameImage}" -->
                     <Image Source="avares://RetroAchievCollection/Assets/super_mario.png"
                            Stretch="Uniform"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Stretch" />
                 </Border>
 
-                <Border Grid.Column="1" Classes="main-borders">
+                <Border Grid.Column="1" Classes="main-borders" 
+                        HorizontalAlignment="Left">
                     <Grid ColumnDefinitions="105, *"
                           RowDefinitions="20, 20, 20, 20"
                           VerticalAlignment="Center"
@@ -85,8 +85,8 @@
                                 <TextBlock>
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0}/{1}">
-                                            <Binding Path="CompletedAchievements" />
-                                            <Binding Path="TotalAchievements" />
+                                            <Binding Path="AchievementsCompleted" />
+                                            <Binding Path="AchievementsCount" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
@@ -116,25 +116,25 @@
                             <Grid.Styles>
                                 <Style Selector="Border">
                                     <Setter Property="Padding" Value="6" />
+                                    <Setter Property="BorderBrush" Value="Gray" />
                                 </Style>
                             </Grid.Styles>
 
-                            <Border Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">
-                                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White">
-                                    <Image Source="{Binding ImagePath}"
-                                           Stretch="UniformToFill"
-                                           HorizontalAlignment="Stretch"
-                                           VerticalAlignment="Stretch" />
-                                </StackPanel>
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"
+                                    Background="White">
+                                <Image Source="{Binding ImagePath}"
+                                       Stretch="UniformToFill"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch" />
                             </Border>
 
-                            <Border Grid.Row="0" Grid.Column="1"
-                                    BorderBrush="Gray"
-                                    BorderThickness="2 0">
+                            <Border Grid.Row="0" Grid.Column="1" BorderThickness="2 0" >
                                 <Grid RowDefinitions="20, 40"
                                       HorizontalAlignment="Stretch">
 
-                                    <StackPanel Grid.Row="0">
+                                    <StackPanel Grid.Row="0" >
                                         <TextBlock Text="{Binding Name}" />
                                     </StackPanel>
                                     <StackPanel Grid.Row="1">
@@ -143,7 +143,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="0" Grid.Column="2" >
+                            <Border Grid.Row="0" Grid.Column="2">
                                 <PathIcon>
                                     <PathIcon.Styles>
                                         <Style Selector="PathIcon">
@@ -158,7 +158,7 @@
                                     </PathIcon.Styles>
 
                                     <PathIcon.Tag>
-                                        <Binding Path="Completed" />
+                                        <Binding Path="IsCompleted" />
                                     </PathIcon.Tag>
                                 </PathIcon>
                             </Border>

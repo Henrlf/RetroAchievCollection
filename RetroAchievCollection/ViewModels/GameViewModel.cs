@@ -35,36 +35,25 @@ public partial class GameViewModel : BaseViewModel
             return;
         }
 
-        Games.Add(new GameCardViewModel
+        Games.Add(new GameCardViewModel(_mainVm)
         {
             Id = 1,
             Name = "Super Mario",
             ReleaseDate = new DateOnly(2026, 10, 1),
-            AchievProgressPercentage = 20,
-            TotalAchievements = 20,
-            CompletedAchievements = 100,
         });
 
-        Games.Add(new GameCardViewModel
-        {
-            Id = 2,
-            Name = "Super Mario",
-            ReleaseDate = new DateOnly(2026, 10, 1),
-            AchievProgressPercentage = 20,
-            TotalAchievements = 20,
-            CompletedAchievements = 100,
-        });
-
-        Games.Add(new GameCardViewModel
-        {
-            Id = 3,
-            Name = "Super Mario",
-            ReleaseDate = new DateOnly(2026, 10, 1),
-            AchievProgressPercentage = 20,
-            TotalAchievements = 20,
-            CompletedAchievements = 100,
-        });
+        // Games.Add(new GameCardViewModel
+        // {
+        //     Id = 2,
+        //     Name = "Super Mario",
+        //     ReleaseDate = new DateOnly(2026, 10, 1),
+        // });
+        //
+        // Games.Add(new GameCardViewModel
+        // {
+        //     Id = 3,
+        //     Name = "Super Mario",
+        //     ReleaseDate = new DateOnly(2026, 10, 1),
+        // });
     }
-
-
 }

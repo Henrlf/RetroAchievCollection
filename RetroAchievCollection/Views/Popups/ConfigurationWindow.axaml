@@ -1,0 +1,86 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Popups"
+        mc:Ignorable="d"
+        x:Class="RetroAchievCollection.Views.Popups.ConfigurationWindow"
+        Title="Configurations"
+        x:DataType="vm:ConfigurationWindowModel"
+        x:CompileBindings="True">
+
+    <DockPanel>
+        <Grid DockPanel.Dock="Bottom"
+              Background="#4a4a4a"
+              ColumnDefinitions="*, 80">
+
+            <Grid.Styles>
+                <Style Selector="Border">
+                    <Setter Property="CornerRadius" Value="3" />
+                    <Setter Property="Width" Value="80" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Right" />
+                    <Setter Property="Margin" Value="2, 6, 8, 6" />
+                </Style>
+
+                <Style Selector="Button">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                </Style>
+
+            </Grid.Styles>
+
+            <Border Grid.Column="0" Background="Green">
+                <Button Content="Save"
+                        Command="{Binding SaveConfigurations}" />
+            </Border>
+
+            <Border Grid.Column="1" Background="DarkGray">
+                <Button Click="CloseWindow"
+                        Content="Cancel"
+                        Foreground="Black" />
+            </Border>
+        </Grid>
+
+        <Grid RowDefinitions="*, *"
+              ColumnDefinitions="100, *"
+              VerticalAlignment="Center"
+              Margin="12, 0">
+
+            <Grid.Styles>
+                <Style Selector="StackPanel">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="6" />
+                </Style>
+
+                <Style Selector="TextBox">
+                    <Setter Property="AcceptsReturn" Value="False" />
+                    <Setter Property="TextWrapping" Value="NoWrap" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="SelectionBrush" Value="LightGray" />
+                    <Setter Property="SelectionForegroundBrush" Value="Black" />
+                </Style>
+            </Grid.Styles>
+
+            <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">
+                <TextBlock Text="Username:" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="0" Grid.Column="1">
+                <TextBox Watermark="Username..."
+                         Text="{Binding UserName}" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">
+                <TextBlock Text="API Key:" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <TextBox Watermark="API key..."
+                         Text="{Binding ApiKey}" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

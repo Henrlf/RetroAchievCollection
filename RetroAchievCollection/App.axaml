@@ -15,6 +15,10 @@
         <Style Selector="Window">
             <Setter Property="Background" Value="#2A2A2A" />
         </Style>
+        
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" /> 
+        </Style>
     </Application.Styles>
     
     <Application.Resources>
