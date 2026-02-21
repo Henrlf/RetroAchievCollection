@@ -43,7 +43,7 @@ public partial class MainWindowViewModel : ObservableObject
     {
         var dialog = new ConfigurationWindow()
         {
-            Width = 400,
+            Width = 450,
             Height = 250,
             CanResize = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,

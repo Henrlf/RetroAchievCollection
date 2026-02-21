@@ -33,4 +33,16 @@ public abstract class BaseService
         var json = JsonSerializer.Serialize(model, new JsonSerializerOptions {WriteIndented = true});
         await File.WriteAllTextAsync(filePath, json);
     }
+
+    public string LoadJson(string fileName)
+    {
+        var filePath = Path.Combine(Directory, fileName);
+        
+        if (!File.Exists(filePath))
+        {
+            return "";
+        }
+        
+        return File.ReadAllText(filePath);
+    }
 }

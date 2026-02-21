@@ -3,7 +3,7 @@ using RetroAchievCollection.Services;
 
 namespace RetroAchievCollection.ViewModels;
 
-public abstract class BaseViewModel : ObservableObject
+public abstract class BaseViewModel : ObservableValidator
 {
     protected readonly MainWindowViewModel? _mainVm;
     protected readonly INotificationService? _notificationService;

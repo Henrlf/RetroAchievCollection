@@ -30,12 +30,13 @@ public class ConfigurationService : BaseService
 
     public ConfigurationModel LoadConfigurationModel()
     {
-        if (!File.Exists("config.json"))
+        string json = LoadJson("config.json");
+
+        if (string.IsNullOrWhiteSpace(json))
         {
             return new ConfigurationModel();
         }
 
-        string json = File.ReadAllText("config.json");
         ConfigurationModel? configModel = JsonSerializer.Deserialize<ConfigurationModel>(json);
 
         if (configModel == null)

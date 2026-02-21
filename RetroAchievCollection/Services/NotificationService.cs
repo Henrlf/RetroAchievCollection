@@ -11,7 +11,7 @@ public class NotificationService : INotificationService
     {
         _manager = new WindowNotificationManager(window)
         {
-            Position = NotificationPosition.TopRight,
+            Position = NotificationPosition.TopCenter,
             MaxItems = 3
         };
     }
