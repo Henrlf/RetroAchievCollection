@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
 

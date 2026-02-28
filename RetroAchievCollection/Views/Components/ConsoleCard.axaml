@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels"
+             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Cards"
              mc:Ignorable="d"
              x:Class="RetroAchievCollection.Views.Components.ConsoleCard"
              x:DataType="vm:ConsoleCardViewModel"
@@ -50,31 +50,31 @@
                           HorizontalAlignment="Left">
 
                         <StackPanel Grid.Row="0" Grid.Column="0">
-                            <TextBlock Text="Console: " />
+                            <TextBlock Text="ID: " />
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1">
+                            <TextBlock Text="{Binding Company}" />
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="1" Grid.Column="0">
+                            <TextBlock Text="Console: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
                             <TextBlock Text="{Binding Name}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Row="1" Grid.Column="0">
+                        <StackPanel Grid.Row="2" Grid.Column="0">
                             <TextBlock Text="Company: " />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1">
                             <TextBlock Text="{Binding Company}" />
                         </StackPanel>
-
-                        <StackPanel Grid.Row="2" Grid.Column="0">
-                            <TextBlock Text="Field1: " />
-                        </StackPanel>
-                        <StackPanel Grid.Row="2" Grid.Column="1">
-                            <TextBlock Text="{Binding Company}" />
-                        </StackPanel>
-
+                        
                         <StackPanel Grid.Row="3" Grid.Column="0">
-                            <TextBlock Text="Field2: " />
+                            <TextBlock Text="Games: " />
                         </StackPanel>
                         <StackPanel Grid.Row="3" Grid.Column="1">
-                            <TextBlock Text="{Binding Company}" />
+                            <TextBlock Text="{Binding Games}" />
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -105,11 +105,11 @@
                             </Style>
                         </Grid.Styles>
 
-                        <Border Grid.Column="0" Classes="option-border">
-                            <Button ToolTip.Tip="Stard Emulator">
-                                <PathIcon Data="{StaticResource play_regular}" Foreground="Green" />
-                            </Button>
-                        </Border>
+                        <!-- <Border Grid.Column="0" Classes="option-border"> -->
+                        <!--     <Button ToolTip.Tip="Stard Emulator"> -->
+                        <!--         <PathIcon Data="{StaticResource play_regular}" Foreground="Green" /> -->
+                        <!--     </Button> -->
+                        <!-- </Border> -->
 
                         <Border Grid.Column="1" Classes="option-border">
                             <Button ToolTip.Tip="See Games"

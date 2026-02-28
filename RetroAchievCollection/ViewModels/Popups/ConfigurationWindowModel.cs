@@ -1,7 +1,7 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroAchievCollection.Models;
-using RetroAchievCollection.Services;
+using RetroAchievCollection.Services.User;
 
 namespace RetroAchievCollection.ViewModels.Popups;
 

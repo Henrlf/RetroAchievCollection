@@ -2,7 +2,7 @@
 using System.Text.Json;
 using RetroAchievCollection.Models;
 
-namespace RetroAchievCollection.Services;
+namespace RetroAchievCollection.Services.User;
 
 public class ConfigurationService : BaseService
 {

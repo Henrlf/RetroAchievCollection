@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using RetroAchievCollection.Models;
 
-namespace RetroAchievCollection.ViewModels;
+namespace RetroAchievCollection.ViewModels.Cards;
 
 public partial class GameCardViewModel : BaseViewModel
 {

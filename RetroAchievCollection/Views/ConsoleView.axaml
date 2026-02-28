@@ -31,7 +31,8 @@
         </Grid.Styles>
 
         <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
-            <Button ToolTip.Tip="Synchronize Information" Classes="sync-button">
+            <Button ToolTip.Tip="Synchronize Consoles" Classes="sync-button"
+                    Command="{Binding SynchronizeConsoles}">
                 <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
             </Button>
         </Border>
