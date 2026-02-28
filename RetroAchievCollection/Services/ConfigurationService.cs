@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Text.Json;
 using RetroAchievCollection.Models;
 
@@ -9,14 +8,9 @@ public class ConfigurationService : BaseService
 {
     public void SaveConfigurations(string UserName, string ApiKey)
     {
-        if (string.IsNullOrWhiteSpace(UserName))
+        if (string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(ApiKey))
         {
-            throw new ArgumentException("Username is required!");
-        }
-
-        if (string.IsNullOrWhiteSpace(ApiKey))
-        {
-            throw new ArgumentException("API Key is required!");
+            throw new ArgumentException("Username and API Key is required!");
         }
 
         var configModel = new ConfigurationModel

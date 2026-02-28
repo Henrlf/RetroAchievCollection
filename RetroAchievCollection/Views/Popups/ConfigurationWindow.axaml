@@ -70,7 +70,15 @@
 
             <StackPanel Grid.Row="0" Grid.Column="1">
                 <TextBox Watermark="Username..."
-                         Text="{Binding UserName}" />
+                         Text="{Binding UserName}"
+                         Tag="{Binding UserNameHasError}">
+                    <TextBox.Styles>
+                        <Style Selector="TextBox[Tag=True]">
+                            <Setter Property="BorderBrush" Value="#ff564a" />
+                            <Setter Property="BorderThickness" Value="2" />
+                        </Style>
+                    </TextBox.Styles>
+                </TextBox>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">
@@ -79,7 +87,15 @@
 
             <StackPanel Grid.Row="1" Grid.Column="1">
                 <TextBox Watermark="API key..."
-                         Text="{Binding ApiKey}" />
+                         Text="{Binding ApiKey}"
+                         Tag="{Binding ApiKeyHasError}">
+                    <TextBox.Styles>
+                        <Style Selector="TextBox[Tag=True]">
+                            <Setter Property="BorderBrush" Value="#ff564a" />
+                            <Setter Property="BorderThickness" Value="2" />
+                        </Style>
+                    </TextBox.Styles>
+                </TextBox>
             </StackPanel>
         </Grid>
     </DockPanel>
