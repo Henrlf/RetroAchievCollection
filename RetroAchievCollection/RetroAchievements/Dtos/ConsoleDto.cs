@@ -13,6 +13,6 @@ public class ConsoleDto
     [JsonPropertyName("userName")]
     public string Company {get; set;} = "";
     
-    [JsonPropertyName("IconUrl")]
+    [JsonPropertyName("IconURL")]
     public string ImageUrl {get; set;} = "";
 }

@@ -33,9 +33,11 @@
 
         <Border Classes="main-border">
             <Grid ColumnDefinitions="100, *, Auto">
-                <Border Grid.Column="0"  Background="Transparent" >
-                    <Image Source="avares://RetroAchievCollection/Assets/nintendo_switch.png"
-                           Stretch="UniformToFill"
+                <Border Grid.Column="0"
+                        Background="Transparent"
+                        Padding="20">
+                    <Image Source="{Binding Image}"
+                           Stretch="Uniform"
                            StretchDirection="Both"
                            VerticalAlignment="Stretch"
                            HorizontalAlignment="Stretch" />
@@ -44,36 +46,39 @@
                 <Border Grid.Column="1"
                         BorderBrush="Gray"
                         BorderThickness="2 0">
-                    <Grid ColumnDefinitions="100, *"
-                          RowDefinitions="20, 20, 20, 20"
+                    <Grid ColumnDefinitions="85, *"
+                          RowDefinitions="30, 25, 25"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Left">
 
-                        <StackPanel Grid.Row="0" Grid.Column="0">
-                            <TextBlock Text="ID: " />
-                        </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1">
-                            <TextBlock Text="{Binding Company}" />
-                        </StackPanel>
-                        
-                        <StackPanel Grid.Row="1" Grid.Column="0">
-                            <TextBlock Text="Console: " />
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="1">
-                            <TextBlock Text="{Binding Name}" />
-                        </StackPanel>
+                        <Grid.Styles>
+                            <Style Selector="StackPanel">
+                                <Setter Property="VerticalAlignment" Value="Bottom" />
+                            </Style>
+                        </Grid.Styles>
 
-                        <StackPanel Grid.Row="2" Grid.Column="0">
+                        <Border Grid.Row="0" Grid.ColumnSpan="2"
+                                BorderThickness="0, 0, 0, 1"
+                                Width="250"
+                                BorderBrush="Gray">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontWeight="Bold" />
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0">
                             <TextBlock Text="Company: " />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1">
                             <TextBlock Text="{Binding Company}" />
                         </StackPanel>
-                        
-                        <StackPanel Grid.Row="3" Grid.Column="0">
+
+                        <StackPanel Grid.Row="2" Grid.Column="0">
                             <TextBlock Text="Games: " />
                         </StackPanel>
-                        <StackPanel Grid.Row="3" Grid.Column="1">
+                        <StackPanel Grid.Row="2" Grid.Column="1">
                             <TextBlock Text="{Binding Games}" />
                         </StackPanel>
                     </Grid>
@@ -105,15 +110,10 @@
                             </Style>
                         </Grid.Styles>
 
-                        <!-- <Border Grid.Column="0" Classes="option-border"> -->
-                        <!--     <Button ToolTip.Tip="Stard Emulator"> -->
-                        <!--         <PathIcon Data="{StaticResource play_regular}" Foreground="Green" /> -->
-                        <!--     </Button> -->
-                        <!-- </Border> -->
-
                         <Border Grid.Column="1" Classes="option-border">
                             <Button ToolTip.Tip="See Games"
-                                    Command="{Binding LoadGameViewCommand}">
+                                    Command="{Binding LoadGameViewCommand}"
+                                    CommandParameter="{Binding Id}">
                                 <PathIcon Data="{StaticResource star_regular}" Foreground="Orange" />
                             </Button>
                         </Border>

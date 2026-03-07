@@ -2,8 +2,10 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroAchievCollection.Commands.Console;
+using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.ViewModels.Cards;
 
@@ -25,7 +27,7 @@ public partial class ConsoleViewModel : BaseViewModel
             SynchronizeConsolesCommand command = new(_mainVm.configurationService);
             await command.execute();
             
-            _notificationService?.ShowSuccess("Configurations saved.");
+            _notificationService?.ShowSuccess("Consoles synchronized.");
             _mainVm.ShowConsolesView();
         }
         catch (Exception ex)
@@ -46,7 +48,7 @@ public partial class ConsoleViewModel : BaseViewModel
                 Id = consoleModel.Id,
                 Name = consoleModel.Name,
                 Company = consoleModel.Company,
-                ImagePath = Path.Combine(consoleService.Directory, consoleModel.ImagePath),
+                ImagePath = Path.Combine(BaseService.Directory, "images", consoleModel.ImagePath)
             });
         }
     }

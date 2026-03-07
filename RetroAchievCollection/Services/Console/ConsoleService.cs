@@ -14,7 +14,7 @@ public class ConsoleService : BaseService
 {
     public Collection<ConsoleModel> GetConsoles()
     {
-        string json = LoadJson("console.json");
+        string json = LoadJson("consoles.json");
         Collection<ConsoleModel> consoleCollection = new();
 
         if (string.IsNullOrWhiteSpace(json))
@@ -43,21 +43,27 @@ public class ConsoleService : BaseService
             ConsoleModel console = consoleCollection.GetValueOrDefault(consoleDto.ConsoleId) ?? new ConsoleModel();
             console.Id = consoleDto.ConsoleId;
             console.Name = consoleDto.Name;
-            // console.Company = consoleDto.Company;
 
-            if (string.IsNullOrWhiteSpace(console.ImagePath) || !File.Exists(console.ImagePath))
+            if ((string.IsNullOrWhiteSpace(console.ImagePath) || !File.Exists(console.ImagePath))
+                && !string.IsNullOrWhiteSpace(consoleDto.ImageUrl))
             {
                 var extension = Path.GetExtension(new Uri(consoleDto.ImageUrl).AbsolutePath);
-                var imagePath = Path.Combine("images", "console", console.Id + extension);
+                var imagePath = Path.Combine("console", console.Id + extension);
 
-                await SaveImageAsync(consoleDto.ImageUrl, imagePath);
-
-                console.ImagePath = imagePath;
+                try
+                {
+                    await SaveImageAsync(consoleDto.ImageUrl, imagePath);
+                    console.ImagePath = imagePath;
+                }
+                catch (Exception e)
+                {
+                    await SaveError(e.ToString());
+                }
             }
 
             consoleCollection[consoleDto.ConsoleId] = console;
         }
 
-        await SaveFileAsync("consoles.json", consoleCollection.Values.OrderBy(c => c.Name));
+        await SaveJsonAsync("consoles.json", consoleCollection.Values.OrderBy(c => c.Name));
     }
 }

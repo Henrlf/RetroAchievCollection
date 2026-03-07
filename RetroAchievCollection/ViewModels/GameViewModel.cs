@@ -16,11 +16,6 @@ public partial class GameViewModel : BaseViewModel
 
     public void LoadConsolesView()
     {
-        if (_mainVm == null)
-        {
-            return;
-        }
-
         _mainVm.ShowConsolesView();
     }
 
@@ -28,30 +23,11 @@ public partial class GameViewModel : BaseViewModel
     {
         Games.Clear();
 
-        if (_mainVm == null)
-        {
-            return;
-        }
-
         Games.Add(new GameCardViewModel(_mainVm)
         {
             Id = 1,
             Name = "Super Mario",
             ReleaseDate = new DateOnly(2026, 10, 1),
         });
-
-        // Games.Add(new GameCardViewModel
-        // {
-        //     Id = 2,
-        //     Name = "Super Mario",
-        //     ReleaseDate = new DateOnly(2026, 10, 1),
-        // });
-        //
-        // Games.Add(new GameCardViewModel
-        // {
-        //     Id = 3,
-        //     Name = "Super Mario",
-        //     ReleaseDate = new DateOnly(2026, 10, 1),
-        // });
     }
 }

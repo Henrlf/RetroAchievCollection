@@ -28,11 +28,25 @@ public abstract class BaseService
     protected async Task<string> GetAsync(string endpoint)
     {
         Validate();
-        
-        var response = await _httpClient.GetAsync(getUrl(endpoint));
-        response.EnsureSuccessStatusCode();
-        
-        return await response.Content.ReadAsStringAsync();
+
+        try
+        {
+            var url = getUrl(endpoint);
+            await RetroAchievCollection.Services.BaseService.SaveLog("request.log", url);
+            
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            
+            var content = await response.Content.ReadAsStringAsync();
+            await RetroAchievCollection.Services.BaseService.SaveLog("request.log", content);
+            
+            return content;
+        }
+        catch (Exception e)
+        {
+            await RetroAchievCollection.Services.BaseService.SaveError(e.ToString());
+            throw;
+        }
     }
 
     private void Validate()

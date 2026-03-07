@@ -28,8 +28,6 @@ public class RetroAchievementsService : BaseService
         
         var result = JsonSerializer.Deserialize<Collection<ConsoleDto>>(json);
         
-        Console.WriteLine(result);
-        
         return result ?? new Collection<ConsoleDto>();
     }
 }
