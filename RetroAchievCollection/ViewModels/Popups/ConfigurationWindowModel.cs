@@ -1,13 +1,11 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroAchievCollection.Models;
-using RetroAchievCollection.Services.User;
 
 namespace RetroAchievCollection.ViewModels.Popups;
 
 public partial class ConfigurationWindowModel : BaseViewModel
 {
-    private readonly ConfigurationService configurationService = new();
     public event Action? RequestClose;
 
     [ObservableProperty] private string _userName = "";
@@ -23,7 +21,7 @@ public partial class ConfigurationWindowModel : BaseViewModel
 
     public void LoadValues()
     {
-        ConfigurationModel configModel = configurationService.LoadConfigurationModel();
+        ConfigurationModel configModel = _mainVm.configurationService.getConfigurationModel();
         UserName = configModel.UserName;
         ApiKey = configModel.ApiKey;
     }
@@ -35,7 +33,7 @@ public partial class ConfigurationWindowModel : BaseViewModel
 
         try
         {
-            configurationService.SaveConfigurations(UserName, ApiKey);
+            _mainVm.configurationService.SaveConfigurations(UserName, ApiKey);
             _notificationService?.ShowSuccess("Configurations saved.");
             RequestClose?.Invoke();
         }

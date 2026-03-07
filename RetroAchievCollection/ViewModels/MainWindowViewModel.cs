@@ -5,6 +5,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Services;
+using RetroAchievCollection.Services.User;
 using RetroAchievCollection.ViewModels.Popups;
 using RetroAchievCollection.Views.Popups;
 
@@ -14,8 +15,9 @@ public partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty] private object? _currentView;
 
-    public INotificationService NotificationService { get; }
+    public readonly ConfigurationService configurationService = new();
     
+    public INotificationService NotificationService { get; }
     public IRelayCommand LoadConsoleView {get;}
     public IRelayCommand LoadGameView {get;}
 

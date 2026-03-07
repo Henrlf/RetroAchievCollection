@@ -1,17 +1,35 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using RetroAchievCollection.Models;
 using RetroAchievCollection.RetroAchievements.Dtos;
-using RetroAchievCollection.Services.User;
 
 namespace RetroAchievCollection.RetroAchievements.Services;
 
 public class RetroAchievementsService : BaseService
 {
-    public ConfigurationService ConfigurationService {get;} = new();
+    public RetroAchievementsService(ConfigurationModel configurationModel) : base(configurationModel) {}
 
-    public Collection<ConsoleDto> getConsoles()
+    /// <param name="isGameSystem"> Value 0 return all game systems and 1 return only the consoles.</param>
+    public async Task<Collection<ConsoleDto>> getConsolesAsync(int isGameSystem)
     {
-        Collection<ConsoleDto> consoles = new();
+        var parameters = new Dictionary<string, string>
+        {
+            {"y", ApiKey},
+            {"g", isGameSystem.ToString()}
+        };
 
-        return consoles;
+        var content = new FormUrlEncodedContent(parameters);
+        string queryString = await content.ReadAsStringAsync();
+        var json = await GetAsync($"API_GetConsoleIDs.php?{queryString}");
+        
+        var result = JsonSerializer.Deserialize<Collection<ConsoleDto>>(json);
+        
+        Console.WriteLine(result);
+        
+        return result ?? new Collection<ConsoleDto>();
     }
 }

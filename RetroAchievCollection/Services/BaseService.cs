@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -7,12 +8,12 @@ namespace RetroAchievCollection.Services;
 
 public abstract class BaseService
 {
-    private readonly string Directory = Path.Combine(
+    public readonly string Directory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "RetroAchievIntegration"
     );
 
-    public void SaveToJson(string fileName, object model)
+    protected void SaveModelToJson(string fileName, object content)
     {
         var filePath = Path.Combine(Directory, fileName);
 
@@ -21,11 +22,11 @@ public abstract class BaseService
             System.IO.Directory.CreateDirectory(Directory);
         }
 
-        var json = JsonSerializer.Serialize(model, new JsonSerializerOptions {WriteIndented = true});
+        var json = JsonSerializer.Serialize(content, new JsonSerializerOptions {WriteIndented = true});
         File.WriteAllText(filePath, json);
     }
 
-    public async Task SaveToJsonAsync(string fileName, object model)
+    protected async Task SaveFileAsync(string fileName, object content)
     {
         var filePath = Path.Combine(Directory, fileName);
 
@@ -34,11 +35,20 @@ public abstract class BaseService
             System.IO.Directory.CreateDirectory(Directory);
         }
 
-        var json = JsonSerializer.Serialize(model, new JsonSerializerOptions {WriteIndented = true});
+        var json = JsonSerializer.Serialize(content, new JsonSerializerOptions {WriteIndented = true});
         await File.WriteAllTextAsync(filePath, json);
     }
 
-    public string LoadJson(string fileName)
+    protected async Task SaveImageAsync(string url, string fileName)
+    {
+        var filePath = Path.Combine(Directory, fileName);
+        using var http = new HttpClient();
+        var bytes = await http.GetByteArrayAsync(url);
+        
+        await File.WriteAllBytesAsync(filePath, bytes);
+    }
+    
+    protected string LoadJson(string fileName)
     {
         var filePath = Path.Combine(Directory, fileName);
 

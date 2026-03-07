@@ -19,10 +19,10 @@ public class ConfigurationService : BaseService
             ApiKey = ApiKey
         };
 
-        SaveToJson("config.json", configModel);
+        SaveModelToJson("config.json", configModel);
     }
 
-    public ConfigurationModel LoadConfigurationModel()
+    public ConfigurationModel getConfigurationModel()
     {
         string json = LoadJson("config.json");
 
@@ -33,11 +33,6 @@ public class ConfigurationService : BaseService
 
         ConfigurationModel? configModel = JsonSerializer.Deserialize<ConfigurationModel>(json);
 
-        if (configModel == null)
-        {
-            return new ConfigurationModel();
-        }
-
-        return configModel;
+        return configModel ?? new ConfigurationModel();
     }
 }

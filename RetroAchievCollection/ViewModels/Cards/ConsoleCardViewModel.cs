@@ -12,8 +12,8 @@ public partial class ConsoleCardViewModel : BaseViewModel
 
     public IRelayCommand? LoadGameViewCommand {get; set;}
 
-    public ConsoleCardViewModel(IRelayCommand loadGameViewCommand)
+    public ConsoleCardViewModel(MainWindowViewModel mainVm) : base(mainVm)
     {
-        LoadGameViewCommand = loadGameViewCommand;
+        LoadGameViewCommand = mainVm.LoadGameView;
     }
 }

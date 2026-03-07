@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroAchievCollection.Commands.Console;
+using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -15,38 +18,12 @@ public partial class ConsoleViewModel : BaseViewModel
         LoadConsoles();
     }
 
-    private void LoadConsoles()
-    {
-        Consoles.Clear();
-
-        if (_mainVm == null)
-        {
-            return;
-        }
-
-        Consoles.Add(new ConsoleCardViewModel(_mainVm.LoadGameView)
-        {
-            Id = 1,
-            Name = "Nintendo Wii",
-            Company = "Nintendo",
-            ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg"
-        });
-
-        Consoles.Add(new ConsoleCardViewModel(_mainVm.LoadGameView)
-        {
-            Id = 2,
-            Name = "Super Nintendo",
-            Company = "Nintendo",
-            ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg"
-        });
-    }
-
-    public void SynchronizeConsoles()
+    public async Task SynchronizeConsoles()
     {
         try
         {
-            SynchronizeConsolesCommand command = new();
-            command.execute();
+            SynchronizeConsolesCommand command = new(_mainVm.configurationService);
+            await command.execute();
             
             _notificationService?.ShowSuccess("Configurations saved.");
             _mainVm.ShowConsolesView();
@@ -54,6 +31,23 @@ public partial class ConsoleViewModel : BaseViewModel
         catch (Exception ex)
         {
             _notificationService?.ShowError(ex.Message);
+        }
+    }
+    
+    private void LoadConsoles()
+    {
+        Consoles.Clear();
+        ConsoleService consoleService = new();
+
+        foreach (var consoleModel in consoleService.GetConsoles())
+        {
+            Consoles.Add(new ConsoleCardViewModel(_mainVm)
+            {
+                Id = consoleModel.Id,
+                Name = consoleModel.Name,
+                Company = consoleModel.Company,
+                ImagePath = Path.Combine(consoleService.Directory, consoleModel.ImagePath),
+            });
         }
     }
 }

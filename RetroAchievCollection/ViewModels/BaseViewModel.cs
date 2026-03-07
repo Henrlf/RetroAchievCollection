@@ -5,10 +5,8 @@ namespace RetroAchievCollection.ViewModels;
 
 public abstract class BaseViewModel : ObservableValidator
 {
-    protected readonly MainWindowViewModel? _mainVm;
+    protected readonly MainWindowViewModel _mainVm;
     protected readonly INotificationService? _notificationService;
-
-    protected BaseViewModel() {}
 
     protected BaseViewModel(MainWindowViewModel mainVm)
     {
