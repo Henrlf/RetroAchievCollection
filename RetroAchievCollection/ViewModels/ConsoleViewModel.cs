@@ -2,11 +2,11 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroAchievCollection.Commands.Console;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
+using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -40,7 +40,8 @@ public partial class ConsoleViewModel : BaseViewModel
     {
         Consoles.Clear();
         ConsoleService consoleService = new();
-
+        GameService gameService = new();
+        
         foreach (var consoleModel in consoleService.GetConsoles())
         {
             Consoles.Add(new ConsoleCardViewModel(_mainVm)
@@ -48,7 +49,8 @@ public partial class ConsoleViewModel : BaseViewModel
                 Id = consoleModel.Id,
                 Name = consoleModel.Name,
                 Company = consoleModel.Company,
-                ImagePath = Path.Combine(BaseService.Directory, "images", consoleModel.ImagePath)
+                Games = gameService.GetGames(consoleModel.Id).Count,
+                ImagePath = Path.Combine(BaseService.MainDirectory, consoleModel.ImagePath)
             });
         }
     }

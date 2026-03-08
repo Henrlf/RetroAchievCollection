@@ -19,12 +19,12 @@ public partial class MainWindowViewModel : ObservableObject
     
     public INotificationService NotificationService { get; }
     public IRelayCommand LoadConsoleView {get;}
-    public IRelayCommand LoadGameView {get;}
+    public IRelayCommand<int> LoadGameView { get; }
 
     public MainWindowViewModel(INotificationService notificationService)
     {
         LoadConsoleView = new RelayCommand(ShowConsolesView);
-        LoadGameView = new RelayCommand(ShowGameView);
+        LoadGameView = new RelayCommand<int>(ShowGameView);
         NotificationService = notificationService;
         
         ShowConsolesView();
@@ -35,9 +35,9 @@ public partial class MainWindowViewModel : ObservableObject
         CurrentView = new ConsoleViewModel(this);
     }
 
-    public void ShowGameView()
+    public void ShowGameView(int consoleId)
     {
-        CurrentView = new GameViewModel(this);
+        CurrentView = new GameViewModel(this, consoleId);
     }
 
     [RelayCommand]

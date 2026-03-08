@@ -46,7 +46,7 @@
                 <Border Grid.Column="1"
                         BorderBrush="Gray"
                         BorderThickness="2 0">
-                    <Grid ColumnDefinitions="85, *"
+                    <Grid ColumnDefinitions="80, *"
                           RowDefinitions="30, 25, 25"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Left">

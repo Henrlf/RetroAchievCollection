@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
+using RetroAchievCollection.Services;
+using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -9,9 +11,9 @@ public partial class GameViewModel : BaseViewModel
 {
     [ObservableProperty] private ObservableCollection<GameCardViewModel> _games = new();
 
-    public GameViewModel(MainWindowViewModel mainVm) : base(mainVm)
+    public GameViewModel(MainWindowViewModel mainVm, int consoleId) : base(mainVm)
     {
-        LoadGames();
+        LoadGames(consoleId);
     }
 
     public void LoadConsolesView()
@@ -19,15 +21,19 @@ public partial class GameViewModel : BaseViewModel
         _mainVm.ShowConsolesView();
     }
 
-    private void LoadGames()
+    private void LoadGames(int consoleId)
     {
         Games.Clear();
+        GameService gameService = new();
 
-        Games.Add(new GameCardViewModel(_mainVm)
+        foreach (var gameModel in gameService.GetGames(consoleId))
         {
-            Id = 1,
-            Name = "Super Mario",
-            ReleaseDate = new DateOnly(2026, 10, 1),
-        });
+            Games.Add(new GameCardViewModel(_mainVm)
+            {
+                Id = gameModel.Id,
+                Name = gameModel.Name,
+                ImagePath = Path.Combine(BaseService.MainDirectory, gameModel.ImagePath)
+            });
+        }
     }
 }

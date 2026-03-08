@@ -8,19 +8,19 @@ namespace RetroAchievCollection.Services;
 
 public abstract class BaseService
 {
-    public static readonly string Directory = Path.Combine(
+    public static readonly string MainDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "RetroAchievIntegration"
     );
 
     protected void SaveModelToJson(string fileName, object content)
     {
-        var filePath = Path.Combine(Directory, fileName);
+        var filePath = Path.Combine(MainDirectory, fileName);
         var directory = Path.GetDirectoryName(filePath);
 
-        if (!System.IO.Directory.Exists(directory))
+        if (directory != null && !Directory.Exists(directory))
         {
-            System.IO.Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(directory);
         }
 
         var json = JsonSerializer.Serialize(content, new JsonSerializerOptions {WriteIndented = true});
@@ -29,12 +29,12 @@ public abstract class BaseService
 
     protected async Task SaveJsonAsync(string fileName, object content)
     {
-        var filePath = Path.Combine(Directory, fileName);
+        var filePath = Path.Combine(MainDirectory, fileName);
         var directory = Path.GetDirectoryName(filePath);
 
-        if (!System.IO.Directory.Exists(directory))
+        if (directory != null && !Directory.Exists(directory))
         {
-            System.IO.Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(directory);
         }
 
         var json = JsonSerializer.Serialize(content, new JsonSerializerOptions {WriteIndented = true});
@@ -43,12 +43,12 @@ public abstract class BaseService
 
     protected async Task SaveImageAsync(string url, string fileName)
     {
-        var filePath = Path.Combine(Directory, "images", fileName);
+        var filePath = Path.Combine(MainDirectory, fileName);
         var directory = Path.GetDirectoryName(filePath);
 
-        if (!System.IO.Directory.Exists(directory))
+        if (directory != null && !Directory.Exists(directory))
         {
-            System.IO.Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(directory);
         }
 
         using var http = new HttpClient();
@@ -59,7 +59,7 @@ public abstract class BaseService
 
     protected string LoadJson(string fileName)
     {
-        var filePath = Path.Combine(Directory, fileName);
+        var filePath = Path.Combine(MainDirectory, fileName);
 
         if (!File.Exists(filePath))
         {
@@ -81,12 +81,12 @@ public abstract class BaseService
             log = "Unknown error";
         }
 
-        var filePath = Path.Combine(Directory, "log", fileName);
+        var filePath = Path.Combine(MainDirectory, "log", fileName);
         var directory = Path.GetDirectoryName(filePath);
 
-        if (!System.IO.Directory.Exists(directory))
+        if (directory != null && !Directory.Exists(directory))
         {
-            System.IO.Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(directory);
         }
 
         await File.AppendAllTextAsync(filePath, log + "\n");
