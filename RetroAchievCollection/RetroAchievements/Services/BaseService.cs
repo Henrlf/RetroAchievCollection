@@ -32,19 +32,19 @@ public abstract class BaseService
         try
         {
             var url = getUrl(endpoint);
-            await RetroAchievCollection.Services.BaseService.SaveLog("request.log", url);
+            RetroAchievCollection.Services.BaseService.SaveLog("request.log", url);
             
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             
             var content = await response.Content.ReadAsStringAsync();
-            await RetroAchievCollection.Services.BaseService.SaveLog("request.log", content);
+            RetroAchievCollection.Services.BaseService.SaveLog("request.log", content);
             
             return content;
         }
         catch (Exception e)
         {
-            await RetroAchievCollection.Services.BaseService.SaveError(e.ToString());
+            RetroAchievCollection.Services.BaseService.SaveError(e.ToString());
             throw;
         }
     }

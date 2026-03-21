@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Cards"
              mc:Ignorable="d"
-             x:Class="RetroAchievCollection.Views.Components.ConsoleCard"
+             x:Class="RetroAchievCollection.Views.Cards.ConsoleCard"
              x:DataType="vm:ConsoleCardViewModel"
              x:CompileBindings="True">
 

@@ -19,7 +19,7 @@ public class ConfigurationService : BaseService
             ApiKey = ApiKey
         };
 
-        SaveModelToJson("config.json", configModel);
+        SaveJson("config.json", configModel);
     }
 
     public ConfigurationModel getConfigurationModel()

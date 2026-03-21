@@ -9,7 +9,7 @@ public partial class ConsoleCardViewModel : BaseViewModel
     public int Id {get; set;}
     public string Name {get; set;} = "";
     public string Company {get; set;} = "";
-    public int Games {get; set;} = 0;
+    public int Games {get; set;}
     public string ImagePath {get; set;} = "";
 
     public Bitmap? Image => File.Exists(ImagePath) ? new Bitmap(ImagePath) : null;

@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels"
-             xmlns:components="clr-namespace:RetroAchievCollection.Views.Components"
+             xmlns:components="clr-namespace:RetroAchievCollection.Views.Cards"
              mc:Ignorable="d"
              x:Class="RetroAchievCollection.Views.GameView"
              x:DataType="vm:GameViewModel"
@@ -38,11 +38,11 @@
             </Button>
         </Border>
 
-        <Border Grid.Row="0" Grid.Column="1" Classes="border-button">
-            <Button ToolTip.Tip="Synchronize Achievements" Classes="menu-btn">
-                <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
-            </Button>
-        </Border>
+        <!-- <Border Grid.Row="0" Grid.Column="1" Classes="border-button"> -->
+        <!--     <Button ToolTip.Tip="Synchronize Achievements" Classes="menu-btn"> -->
+        <!--         <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" /> -->
+        <!--     </Button> -->
+        <!-- </Border> -->
 
         <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 0" />
 

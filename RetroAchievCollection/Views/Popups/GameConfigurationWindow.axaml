@@ -4,16 +4,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Popups"
         mc:Ignorable="d"
-        x:Class="RetroAchievCollection.Views.Popups.ConfigurationWindow"
-        Title="User Configurations"
-        x:DataType="vm:ConfigurationWindowModel"
-        x:CompileBindings="True">
+        x:Class="RetroAchievCollection.Views.Popups.GameConfigurationWindow"
+        x:DataType="vm:GameConfigurationWindowModel"
+        Title="Game Configuration">
 
     <DockPanel>
         <Grid DockPanel.Dock="Bottom"
               Background="#4a4a4a"
               ColumnDefinitions="*, 80">
-
             <Grid.Styles>
                 <Style Selector="Border">
                     <Setter Property="CornerRadius" Value="3" />
@@ -45,10 +43,9 @@
         </Grid>
 
         <Grid RowDefinitions="*, *"
-              ColumnDefinitions="100, *"
+              ColumnDefinitions="120, *"
               VerticalAlignment="Center"
               Margin="12, 0">
-
             <Grid.Styles>
                 <Style Selector="StackPanel">
                     <Setter Property="VerticalAlignment" Value="Center" />
@@ -65,36 +62,12 @@
             </Grid.Styles>
 
             <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">
-                <TextBlock Text="Username:" />
+                <TextBlock Text="Play Command:" />
             </StackPanel>
 
             <StackPanel Grid.Row="0" Grid.Column="1">
-                <TextBox Watermark="Username..."
-                         Text="{Binding UserName}"
-                         Tag="{Binding UserNameHasError}">
-                    <TextBox.Styles>
-                        <Style Selector="TextBox[Tag=True]">
-                            <Setter Property="BorderBrush" Value="#ff564a" />
-                            <Setter Property="BorderThickness" Value="2" />
-                        </Style>
-                    </TextBox.Styles>
-                </TextBox>
-            </StackPanel>
-
-            <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">
-                <TextBlock Text="API Key:" />
-            </StackPanel>
-
-            <StackPanel Grid.Row="1" Grid.Column="1">
-                <TextBox Watermark="API key..."
-                         Text="{Binding ApiKey}"
-                         Tag="{Binding ApiKeyHasError}">
-                    <TextBox.Styles>
-                        <Style Selector="TextBox[Tag=True]">
-                            <Setter Property="BorderBrush" Value="#ff564a" />
-                            <Setter Property="BorderThickness" Value="2" />
-                        </Style>
-                    </TextBox.Styles>
+                <TextBox Watermark="Play Command..."
+                         Text="{Binding PlayCommand}">
                 </TextBox>
             </StackPanel>
         </Grid>

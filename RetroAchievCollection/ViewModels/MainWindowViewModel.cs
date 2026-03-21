@@ -14,19 +14,21 @@ namespace RetroAchievCollection.ViewModels;
 public partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty] private object? _currentView;
+    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private string _textLoading = "Loading...";
 
     public readonly ConfigurationService configurationService = new();
-    
-    public INotificationService NotificationService { get; }
+
+    public INotificationService NotificationService {get;}
     public IRelayCommand LoadConsoleView {get;}
-    public IRelayCommand<int> LoadGameView { get; }
+    public IRelayCommand<int> LoadGameView {get;}
 
     public MainWindowViewModel(INotificationService notificationService)
     {
         LoadConsoleView = new RelayCommand(ShowConsolesView);
         LoadGameView = new RelayCommand<int>(ShowGameView);
         NotificationService = notificationService;
-        
+
         ShowConsolesView();
     }
 

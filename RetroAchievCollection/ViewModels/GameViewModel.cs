@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
-using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
@@ -31,8 +29,9 @@ public partial class GameViewModel : BaseViewModel
             Games.Add(new GameCardViewModel(_mainVm)
             {
                 Id = gameModel.Id,
+                ConsoleId = gameModel.ConsoleId,
                 Name = gameModel.Name,
-                ImagePath = Path.Combine(BaseService.MainDirectory, gameModel.ImagePath)
+                ImagePath = gameModel.ImagePath
             });
         }
     }

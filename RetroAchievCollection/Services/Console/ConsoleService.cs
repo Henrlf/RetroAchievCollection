@@ -14,16 +14,13 @@ public class ConsoleService : BaseService
     public List<ConsoleModel> GetConsoles()
     {
         string json = LoadJson("consoles.json");
-        List<ConsoleModel> consoleList = new();
 
         if (string.IsNullOrWhiteSpace(json))
         {
-            return consoleList;
+            return new List<ConsoleModel>();
         }
 
-        List<ConsoleModel>? consoles = JsonSerializer.Deserialize<List<ConsoleModel>>(json);
-
-        return consoles ?? consoleList;
+        return JsonSerializer.Deserialize<List<ConsoleModel>>(json) ?? new List<ConsoleModel>();
     }
 
     public ConsoleModel? GetConsole(int id)
@@ -47,14 +44,14 @@ public class ConsoleService : BaseService
                 try
                 {
                     var extension = Path.GetExtension(new Uri(consoleDto.ImageUrl).AbsolutePath);
-                    var imagePath = Path.Combine("images", "console", console.Id + extension);
+                    var imagePath = Path.Combine(MainDirectory, "images", "console", console.Id + extension);
 
                     await SaveImageAsync(consoleDto.ImageUrl, imagePath);
                     console.ImagePath = imagePath;
                 }
                 catch (Exception e)
                 {
-                    await SaveError(e.ToString());
+                    SaveError(e.ToString());
                 }
             }
 

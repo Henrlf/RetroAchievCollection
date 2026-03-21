@@ -27,7 +27,7 @@ public class SynchronizeConsolesCommand
         foreach (var consoleDto in consolesDto)
         {
             var gamesDto = await RetroAchievementsService.getConsoleGamesAsync(consoleDto.ConsoleId);
-            var semaphore = new SemaphoreSlim(10);
+            var semaphore = new SemaphoreSlim(20);
 
             await Task.WhenAll(gamesDto.Select(async gameDto =>
             {

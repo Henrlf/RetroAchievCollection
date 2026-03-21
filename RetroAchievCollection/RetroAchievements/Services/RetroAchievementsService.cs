@@ -17,7 +17,8 @@ public class RetroAchievementsService : BaseService
         var parameters = new Dictionary<string, string>
         {
             {"y", ApiKey},
-            {"g", isGameSystem.ToString()}
+            {"g", isGameSystem.ToString()},
+            {"a", "1"}
         };
 
         var content = new FormUrlEncodedContent(parameters);
@@ -45,5 +46,23 @@ public class RetroAchievementsService : BaseService
         var result = JsonSerializer.Deserialize<List<GameDto>>(json);
         
         return result ?? new List<GameDto>();
+    }
+    
+    public async Task<GameDto> getGameAndAchievementsAsync(int gameId)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            {"y", ApiKey},
+            {"u", ApiUsername},
+            {"g", gameId.ToString()}
+        };
+
+        var content = new FormUrlEncodedContent(parameters);
+        string queryString = await content.ReadAsStringAsync();
+        var json = await GetAsync($"API_GetGameInfoAndUserProgress.php?{queryString}");
+        
+        var result = JsonSerializer.Deserialize<GameDto>(json);
+        
+        return result ?? new GameDto();
     }
 }

@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Cards"
              xmlns:models="clr-namespace:RetroAchievCollection.Models"
              mc:Ignorable="d"
-             x:Class="RetroAchievCollection.Views.Components.GameCard"
+             x:Class="RetroAchievCollection.Views.Cards.GameCard"
              x:DataType="vm:GameCardViewModel"
              x:CompileBindings="True">
 
@@ -21,19 +21,50 @@
             <Thickness x:Key="ExpanderHeaderPadding">0</Thickness>
         </Expander.Resources>
 
+        <!-- CARD -->
         <Expander.Header>
-            <Grid ColumnDefinitions="100, *, 150">
+            <Grid ColumnDefinitions="100, *, 150"
+                  RowDefinitions="*, *">
                 <Grid.Styles>
                     <Style Selector="Border.main-borders">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
                         <Setter Property="Padding" Value="6" />
                         <Setter Property="BorderBrush" Value="Gray" />
                         <Setter Property="BorderThickness" Value="0" />
+                    </Style>
+
+                    <Style Selector="Border.border-button">
+                        <Setter Property="HorizontalAlignment" Value="Right" />
                         <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="Width" Value="42" />
+                        <Setter Property="Height" Value="42" />
+                        <Setter Property="Margin" Value="3 0" />
+                        <Setter Property="BorderBrush" Value="gray" />
+                        <Setter Property="CornerRadius" Value="8" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+                    
+                    <Style Selector="Border.bar-progeress">
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0, 5" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Background" Value="Gray" />
+                        <Setter Property="Height" Value="10" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="CornerRadius" Value="1" />
+                    </Style>
+                    
+                    <Style Selector="Button.btn-option">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
                     </Style>
                 </Grid.Styles>
 
-                <Border Grid.Column="0" Classes="main-borders"
+                <Border Grid.Column="0" Grid.RowSpan="2"
+                        Classes="main-borders"
                         BorderThickness="0 , 0, 2 ,0"
                         Background="Transparent">
                     <Image Source="{Binding GameImage}"
@@ -42,7 +73,8 @@
                            VerticalAlignment="Stretch" />
                 </Border>
 
-                <Border Grid.Column="1" Classes="main-borders" 
+                <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                        Classes="main-borders"
                         HorizontalAlignment="Left">
                     <Grid ColumnDefinitions="105, *"
                           RowDefinitions="20, 20, 20, 20"
@@ -65,22 +97,31 @@
                     </Grid>
                 </Border>
 
-                <Border Grid.Column="2">
+                <Border Grid.Row="0" Grid.Column="2"
+                        HorizontalAlignment="Right">
+                    <Grid ColumnDefinitions="*, *"
+                          VerticalAlignment="Bottom"
+                          HorizontalAlignment="Stretch">
+                        <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
+                            <Button ToolTip.Tip="Synchronize Achievements" Classes="btn-option"
+                                    Command="{Binding SynchronizeAchievements}">
+                                <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
+                            </Button>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1" Classes="border-button">
+                            <Button ToolTip.Tip="Configure Play Command" Classes="btn-option"
+                                    Command="{Binding ShowGameConfigurations}">
+                                <PathIcon Data="{StaticResource cog_regular}" Foreground="White" />
+                            </Button>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="2">
                     <Grid VerticalAlignment="Bottom"
                           HorizontalAlignment="Stretch">
                         <Grid RowDefinitions="*, *">
-                            <Grid.Styles>
-                                <Style Selector="Border.option-border">
-                                    <Setter Property="Margin" Value="0, 5" />
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                    <Setter Property="Background" Value="Gray" />
-                                    <Setter Property="Height" Value="10" />
-                                    <Setter Property="BorderThickness" Value="0" />
-                                    <Setter Property="CornerRadius" Value="1" />
-                                </Style>
-                            </Grid.Styles>
-
                             <Border Grid.Row="0" HorizontalAlignment="Right">
                                 <TextBlock>
                                     <TextBlock.Text>
@@ -92,8 +133,8 @@
                                 </TextBlock>
                             </Border>
 
-                            <Border Grid.Row="1" Classes="option-border">
-                                <Border Classes="option-border"
+                            <Border Grid.Row="1" Classes="bar-progeress">
+                                <Border Classes="bar-progeress"
                                         HorizontalAlignment="Left"
                                         Background="Orange"
                                         Width="{Binding AchievProgressPercentage}" />
@@ -104,6 +145,7 @@
             </Grid>
         </Expander.Header>
 
+        <!-- ACHIEVEMENTS -->
         <ScrollViewer MaxHeight="400">
             <ItemsControl ItemsSource="{Binding Achievements}">
                 <ItemsControl.ItemTemplate>
@@ -130,11 +172,11 @@
                                        VerticalAlignment="Stretch" />
                             </Border>
 
-                            <Border Grid.Row="0" Grid.Column="1" BorderThickness="2 0" >
+                            <Border Grid.Row="0" Grid.Column="1" BorderThickness="2 0">
                                 <Grid RowDefinitions="20, 40"
                                       HorizontalAlignment="Stretch">
 
-                                    <StackPanel Grid.Row="0" >
+                                    <StackPanel Grid.Row="0">
                                         <TextBlock Text="{Binding Name}" />
                                     </StackPanel>
                                     <StackPanel Grid.Row="1">

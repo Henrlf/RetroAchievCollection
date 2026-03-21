@@ -13,7 +13,7 @@ public abstract class BaseService
         "RetroAchievIntegration"
     );
 
-    protected void SaveModelToJson(string fileName, object content)
+    protected void SaveJson(string fileName, object content)
     {
         var filePath = Path.Combine(MainDirectory, fileName);
         var directory = Path.GetDirectoryName(filePath);
@@ -41,9 +41,8 @@ public abstract class BaseService
         await File.WriteAllTextAsync(filePath, json);
     }
 
-    protected async Task SaveImageAsync(string url, string fileName)
+    protected async Task SaveImageAsync(string url, string filePath)
     {
-        var filePath = Path.Combine(MainDirectory, fileName);
         var directory = Path.GetDirectoryName(filePath);
 
         if (directory != null && !Directory.Exists(directory))
@@ -69,26 +68,40 @@ public abstract class BaseService
         return File.ReadAllText(filePath);
     }
 
-    public static async Task SaveError(string errorMessage)
+    public static void SaveError(string errorMessage)
     {
-        await SaveLog("error.log", errorMessage);
+        try
+        {
+            SaveLog("error.log", errorMessage);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
-    public static async Task SaveLog(string fileName, string log)
+    public static void SaveLog(string fileName, string log)
     {
-        if (string.IsNullOrWhiteSpace(log))
+        try
         {
-            log = "Unknown error";
+            if (string.IsNullOrWhiteSpace(log))
+            {
+                log = "Unknown error";
+            }
+
+            var filePath = Path.Combine(MainDirectory, "log", fileName);
+            var directory = Path.GetDirectoryName(filePath);
+
+            if (directory != null && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            File.AppendAllTextAsync(filePath, log + "\n");
         }
-
-        var filePath = Path.Combine(MainDirectory, "log", fileName);
-        var directory = Path.GetDirectoryName(filePath);
-
-        if (directory != null && !Directory.Exists(directory))
+        catch
         {
-            Directory.CreateDirectory(directory);
+            // ignored
         }
-
-        await File.AppendAllTextAsync(filePath, log + "\n");
     }
 }

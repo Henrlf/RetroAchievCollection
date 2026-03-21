@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroAchievCollection.Commands.Console;
-using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
@@ -24,9 +22,12 @@ public partial class ConsoleViewModel : BaseViewModel
     {
         try
         {
+            _mainVm.TextLoading = "Synchronizing...";
+            _mainVm.IsLoading = true;
+
             SynchronizeConsolesCommand command = new(_mainVm.configurationService);
             await command.execute();
-            
+
             _notificationService?.ShowSuccess("Consoles synchronized.");
             _mainVm.ShowConsolesView();
         }
@@ -34,14 +35,18 @@ public partial class ConsoleViewModel : BaseViewModel
         {
             _notificationService?.ShowError(ex.Message);
         }
+        finally
+        {
+            _mainVm.IsLoading = false;
+        }
     }
-    
+
     private void LoadConsoles()
     {
         Consoles.Clear();
         ConsoleService consoleService = new();
         GameService gameService = new();
-        
+
         foreach (var consoleModel in consoleService.GetConsoles())
         {
             Consoles.Add(new ConsoleCardViewModel(_mainVm)
@@ -50,7 +55,7 @@ public partial class ConsoleViewModel : BaseViewModel
                 Name = consoleModel.Name,
                 Company = consoleModel.Company,
                 Games = gameService.GetGames(consoleModel.Id).Count,
-                ImagePath = Path.Combine(BaseService.MainDirectory, consoleModel.ImagePath)
+                ImagePath = consoleModel.ImagePath
             });
         }
     }
