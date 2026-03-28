@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroAchievCollection.Commands.Console;
 using RetroAchievCollection.Services.Console;
-using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -45,7 +44,6 @@ public partial class ConsoleViewModel : BaseViewModel
     {
         Consoles.Clear();
         ConsoleService consoleService = new();
-        GameService gameService = new();
 
         foreach (var consoleModel in consoleService.GetConsoles())
         {
@@ -54,7 +52,7 @@ public partial class ConsoleViewModel : BaseViewModel
                 Id = consoleModel.Id,
                 Name = consoleModel.Name,
                 Company = consoleModel.Company,
-                Games = gameService.GetGames(consoleModel.Id).Count,
+                Games = consoleService.GetGames(consoleModel.Id).Count,
                 ImagePath = consoleModel.ImagePath
             });
         }

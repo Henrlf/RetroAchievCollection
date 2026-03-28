@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,6 +29,40 @@ public class ConsoleService : BaseService
         return GetConsoles().FirstOrDefault(console => console.Id == id);
     }
 
+    public List<GameModel> GetGames(int consoleId)
+    {
+        var directoryPath = Path.Combine(MainDirectory, "games", $"console_{consoleId}");
+
+        if (!Directory.Exists(directoryPath))
+        {
+            return new List<GameModel>();
+        }
+
+        var gameCollection = new ConcurrentBag<GameModel>();
+        var arquivos = Directory.GetFiles(directoryPath, "*.json");
+
+        Parallel.ForEach(arquivos, new ParallelOptions {MaxDegreeOfParallelism = 8},
+            arquivo =>
+            {
+                try
+                {
+                    string json = File.ReadAllText(arquivo);
+                    GameModel? game = JsonSerializer.Deserialize<GameModel>(json);
+
+                    if (game != null)
+                    {
+                        gameCollection.Add(game);
+                    }
+                }
+                catch (Exception e)
+                {
+                    SaveError(e.ToString());
+                }
+            });
+
+        return gameCollection.ToList();
+    }
+    
     public async Task SaveConsoles(List<ConsoleDto> consolesDto)
     {
         Dictionary<int, ConsoleModel> consoleList = GetConsoles().ToDictionary(c => c.Id);

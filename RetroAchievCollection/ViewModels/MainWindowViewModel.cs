@@ -4,7 +4,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using RetroAchievCollection.Models;
 using RetroAchievCollection.Services;
+using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.Services.User;
 using RetroAchievCollection.ViewModels.Popups;
 using RetroAchievCollection.Views.Popups;
@@ -39,7 +41,13 @@ public partial class MainWindowViewModel : ObservableObject
 
     public void ShowGameView(int consoleId)
     {
-        CurrentView = new GameViewModel(this, consoleId);
+        ConsoleService consoleService = new();
+        ConsoleModel? consoleModel = consoleService.GetConsole(consoleId);
+
+        CurrentView = new GameViewModel(this, consoleId)
+        {
+            ConsoleName = consoleModel != null ? consoleModel.Name : ""
+        };
     }
 
     [RelayCommand]

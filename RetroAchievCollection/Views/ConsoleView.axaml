@@ -37,13 +37,13 @@
             </Button>
         </Border>
 
-        <Separator Grid.Row="1" Margin="10, 0" />
+        <Separator Grid.Row="1" Margin="10, 5" />
 
         <ScrollViewer Grid.Row="2">
             <ItemsControl ItemsSource="{Binding Consoles}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <components:ConsoleCard DataContext="{Binding}" Margin="10, 14, 10, 0" />
+                        <components:ConsoleCard DataContext="{Binding}" Margin="0 5"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

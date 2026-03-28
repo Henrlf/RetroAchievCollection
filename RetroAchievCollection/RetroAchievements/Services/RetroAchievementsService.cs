@@ -24,12 +24,12 @@ public class RetroAchievementsService : BaseService
         var content = new FormUrlEncodedContent(parameters);
         string queryString = await content.ReadAsStringAsync();
         var json = await GetAsync($"API_GetConsoleIDs.php?{queryString}");
-        
+
         var result = JsonSerializer.Deserialize<List<ConsoleDto>>(json);
-        
+
         return result ?? new List<ConsoleDto>();
     }
-    
+
     public async Task<List<GameDto>> getConsoleGamesAsync(int consoleId)
     {
         var parameters = new Dictionary<string, string>
@@ -42,12 +42,12 @@ public class RetroAchievementsService : BaseService
         var content = new FormUrlEncodedContent(parameters);
         string queryString = await content.ReadAsStringAsync();
         var json = await GetAsync($"API_GetGameList.php?{queryString}");
-        
+
         var result = JsonSerializer.Deserialize<List<GameDto>>(json);
-        
+
         return result ?? new List<GameDto>();
     }
-    
+
     public async Task<GameDto> getGameAndAchievementsAsync(int gameId)
     {
         var parameters = new Dictionary<string, string>
@@ -60,9 +60,9 @@ public class RetroAchievementsService : BaseService
         var content = new FormUrlEncodedContent(parameters);
         string queryString = await content.ReadAsStringAsync();
         var json = await GetAsync($"API_GetGameInfoAndUserProgress.php?{queryString}");
-        
+
         var result = JsonSerializer.Deserialize<GameDto>(json);
-        
+
         return result ?? new GameDto();
     }
 }

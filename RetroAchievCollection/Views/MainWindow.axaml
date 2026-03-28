@@ -46,7 +46,7 @@
 
             <ContentControl Content="{Binding CurrentView}"
                             HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Stretch" />
+                            VerticalContentAlignment="Stretch"/>
         </DockPanel>
         
         <Border IsVisible="{Binding IsLoading}"

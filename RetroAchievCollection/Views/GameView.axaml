@@ -10,7 +10,7 @@
              x:CompileBindings="True">
 
     <Grid RowDefinitions="50, Auto, *"
-          ColumnDefinitions="*, *">
+          ColumnDefinitions="*, *, *">
         <Grid.Styles>
             <Style Selector="Border.border-button">
                 <Setter Property="HorizontalAlignment" Value="Right" />
@@ -38,19 +38,31 @@
             </Button>
         </Border>
 
-        <!-- <Border Grid.Row="0" Grid.Column="1" Classes="border-button"> -->
-        <!--     <Button ToolTip.Tip="Synchronize Achievements" Classes="menu-btn"> -->
-        <!--         <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" /> -->
-        <!--     </Button> -->
-        <!-- </Border> -->
+        <Border Grid.Row="0" Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center">
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <TextBlock Text="{Binding ConsoleName}"
+                           FontSize="16"
+                           FontWeight="Bold" />
+            </StackPanel>
+        </Border>
 
-        <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 0" />
+        <Border Grid.Row="0" Grid.Column="2" Classes="border-button">
+            <Button ToolTip.Tip="Synchronize Achievements" Classes="menu-btn"
+                    Command="{Binding SynchronizeConsoleGames}">
+                <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
+            </Button>
+        </Border>
 
-        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+        <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="10, 5" />
+
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
             <ItemsControl ItemsSource="{Binding Games}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <components:GameCard DataContext="{Binding}" Margin="10, 14, 10, 0" />
+                        <components:GameCard DataContext="{Binding}" Margin="0 5" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

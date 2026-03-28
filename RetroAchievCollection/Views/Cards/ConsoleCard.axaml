@@ -23,7 +23,7 @@
                 <Setter Property="Height" Value="100" />
                 <Setter Property="BorderBrush" Value="Gray" />
                 <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="BorderThickness" Value="1" />
             </Style>
 
             <Style Selector="TextBlock">
@@ -59,7 +59,7 @@
 
                         <Border Grid.Row="0" Grid.ColumnSpan="2"
                                 BorderThickness="0, 0, 0, 1"
-                                Width="250"
+                                Width="350"
                                 BorderBrush="Gray">
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Name}"
@@ -69,14 +69,14 @@
                         </Border>
 
                         <StackPanel Grid.Row="1" Grid.Column="0">
-                            <TextBlock Text="Company: " />
+                            <TextBlock Text="Company: " FontWeight="Bold"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1">
                             <TextBlock Text="{Binding Company}" />
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Grid.Column="0">
-                            <TextBlock Text="Games: " />
+                            <TextBlock Text="Games: " FontWeight="Bold"/>
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="1">
                             <TextBlock Text="{Binding Games}" />
@@ -87,7 +87,8 @@
                 <Border Grid.Column="2">
                     <Grid ColumnDefinitions="*, *, *"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Center">
+                          HorizontalAlignment="Center"
+                          Margin="10 0">
                         <Grid.Styles>
                             <Style Selector="Border.option-border">
                                 <Setter Property="Margin" Value="2" />
@@ -115,12 +116,6 @@
                                     Command="{Binding LoadGameViewCommand}"
                                     CommandParameter="{Binding Id}">
                                 <PathIcon Data="{StaticResource star_regular}" Foreground="Orange" />
-                            </Button>
-                        </Border>
-
-                        <Border Grid.Column="2" Classes="option-border">
-                            <Button ToolTip.Tip="Emulator Config">
-                                <PathIcon Data="{StaticResource cog_regular}" Foreground="LightGray" />
                             </Button>
                         </Border>
                     </Grid>

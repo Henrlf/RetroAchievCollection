@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Game;
 using RetroAchievCollection.Models;
+using RetroAchievCollection.Services;
+using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Popups;
 using RetroAchievCollection.Views.Popups;
 
@@ -19,18 +21,28 @@ public partial class GameCardViewModel : BaseViewModel
 {
     public int Id {get; set;}
     public int ConsoleId {get; set;}
-    public string Name {get; set;} = "";
-    public DateOnly? ReleaseDate {get; set;}
-    public int AchievProgressPercentage {get; set;}
-    public int AchievementsCompleted {get; set;}
-    public int AchievementsCount {get; set;}
-    public string ImagePath {get; set;} = "";
-    public Collection<AchievementModel> Achievements {get; set;} = new();
 
+    [ObservableProperty] public string _name = "";
+    [ObservableProperty] public string _publisher = "";
+    [ObservableProperty] public string _developer = "";
+    [ObservableProperty] public string _genre = "";
+    [ObservableProperty] public string _releaseDate = "-";
+    [ObservableProperty] public string _playCommand = "-";
+    [ObservableProperty] public bool _isFavorite = false;
+
+    [ObservableProperty] public int _achievementsCount;
+    [ObservableProperty] public int _achievementsCompleted;
+    [ObservableProperty] public int _achievProgressPercentage;
+    [ObservableProperty] public ObservableCollection<AchievementCardViewModel> _achievements = new();
+
+    public string ImagePath {get; set;} = "";
     public Bitmap? GameImage => File.Exists(ImagePath) ? new Bitmap(ImagePath) : null;
 
-    public GameCardViewModel(MainWindowViewModel mainVm) : base(mainVm)
+    public GameCardViewModel(MainWindowViewModel mainVm, int gameId, int consoleId) : base(mainVm)
     {
+        Id = gameId;
+        ConsoleId = consoleId;
+        
         LoadAchievements();
     }
 
@@ -51,11 +63,29 @@ public partial class GameCardViewModel : BaseViewModel
 
             GameModel? gameModel = command.GameModel;
 
+            if (gameModel == null)
+            {
+                return;
+            }
+
+            Name = gameModel.Name;
+            Publisher = gameModel.Publisher;
+            Developer = gameModel.Developer;
+            Genre = gameModel.Genre;
+
+            if (!string.IsNullOrWhiteSpace(gameModel.Released))
+            {
+                DateOnly releaseDate = DateOnly.Parse(gameModel.Released);
+                ReleaseDate = releaseDate.ToString("dd/MM/yyyy");
+            }
+
+            LoadAchievements();
+
             _notificationService?.ShowSuccess("Game achievements synchronized.");
-            // _mainVm.ShowGameView();
         }
         catch (Exception ex)
         {
+            BaseService.SaveError(ex.ToString());
             _notificationService?.ShowError(ex.Message);
         }
         finally
@@ -93,63 +123,39 @@ public partial class GameCardViewModel : BaseViewModel
 
             dialog.Show();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _notificationService?.ShowError(e.Message);
+            BaseService.SaveError(ex.ToString());
+            _notificationService?.ShowError(ex.Message);
         }
     }
 
     private void LoadAchievements()
     {
         Achievements.Clear();
+        GameService gameService = new();
+        GameModel? gameModel = gameService.GetGame(Id, ConsoleId);
 
-        Achievements.Add(new AchievementModel
+        if (gameModel == null)
         {
-            Id = 1,
-            Name = "Achievement 1",
-            Description = "Descrição Achievement 1",
-            ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg",
-            IsCompleted = false,
-        });
+            return;
+        }
 
-        Achievements.Add(new AchievementModel
+        foreach (var achievementModel in gameModel.Achievements)
         {
-            Id = 1,
-            Name = "Achievement 2",
-            Description = "Descrição Achievement 2",
-            ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg",
-            IsCompleted = true,
-        });
+            Achievements.Add(new AchievementCardViewModel(_mainVm)
+            {
+                Id = achievementModel.Id,
+                Name = achievementModel.Name,
+                Description = achievementModel.Description,
+                ImagePath = achievementModel.ImagePath,
+                IsCompleted = achievementModel.IsCompleted,
+                IsCompletedHardcore = achievementModel.IsCompletedHardcore,
+            });
+        }
 
-        Achievements.Add(new AchievementModel
-        {
-            Id = 1,
-            Name = "Achievement 3",
-            Description = "Descrição Achievement 5",
-            ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg",
-            IsCompleted = false,
-        });
-
-        Achievements.Add(new AchievementModel
-        {
-            Id = 1,
-            Name = "Achievement 4",
-            Description = "Descrição Achievement 5",
-            ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg",
-            IsCompleted = true,
-        });
-
-        Achievements.Add(new AchievementModel
-        {
-            Id = 1,
-            Name = "Achievement 5",
-            Description = "Descrição Achievement 2",
-            ImagePath = "https://img.cdndsgni.com/preview/11908070.jpg",
-            IsCompleted = true,
-        });
-
-        AchievementsCount = Achievements.Count;
-        AchievementsCompleted = Achievements.Count(achiev => achiev.IsCompleted);
+        AchievementsCount = gameModel.TotalAchievements;
+        AchievementsCompleted = gameModel.TotalAchievementsCompleted;
 
         double result = (double)AchievementsCompleted / AchievementsCount * 150;
         AchievProgressPercentage = (int)result;

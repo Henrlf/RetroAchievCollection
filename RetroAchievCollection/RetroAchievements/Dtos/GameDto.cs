@@ -27,17 +27,17 @@ public class GameDto
     public string Released {get; set;} = "";
 
     [JsonPropertyName("NumAchievements")]
-    public int NumAchievements {get; set;} = 0;
+    public int NumAchievements {get; set;}
 
     [JsonPropertyName("NumAwardedToUser")]
-    public int NumAchievementsCompleted {get; set;} = 0;
+    public int NumAchievementsCompleted {get; set;}
 
     [JsonPropertyName("NumAwardedToUserHardcore")]
-    public int NumAchievementsCompletedHardcore {get; set;} = 0;
+    public int NumAchievementsCompletedHardcore {get; set;}
 
     [JsonPropertyName("ImageIcon")]
     public string ImageUrl {get; set;} = "";
-    
+
     [JsonPropertyName("Achievements")]
-    public List<AchievementDto>? Achievements {get; set;}
+    public Dictionary<string, AchievementDto> Achievements {get; set;} = new();
 }

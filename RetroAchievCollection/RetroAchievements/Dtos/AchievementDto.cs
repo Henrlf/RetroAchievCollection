@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace RetroAchievCollection.RetroAchievements.Dtos;
 
@@ -8,6 +7,9 @@ public class AchievementDto
     [JsonPropertyName("ID")]
     public int Id {get; set;}
 
+    [JsonPropertyName("BadgeName")]
+    public string BadgeName {get; set;} = "";
+    
     [JsonPropertyName("Title")]
     public string Name {get; set;} = "";
 
@@ -15,8 +17,8 @@ public class AchievementDto
     public string Description {get; set;} = "";
 
     [JsonPropertyName("DateEarned")]
-    public DateTime? DateEarned {get; set;}
+    public string DateEarned {get; set;} = "";
 
     [JsonPropertyName("DateEarnedHardcore")]
-    public DateTime? DateEarnedHardcore {get; set;}
+    public string DateEarnedHardcore {get; set;} = "";
 }

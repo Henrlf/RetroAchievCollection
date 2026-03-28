@@ -45,5 +45,5 @@ public class GameModel
     public string ImagePath {get; set;} = "";
 
     [JsonPropertyName("achievements")]
-    public List<AchievementModel>? Achievements {get; set;}
+    public List<AchievementModel> Achievements {get; set;} = new();
 }

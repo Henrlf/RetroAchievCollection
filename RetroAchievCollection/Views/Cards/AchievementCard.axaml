@@ -1,0 +1,85 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Cards"
+             mc:Ignorable="d"
+             x:Class="RetroAchievCollection.Views.Cards.AchievementCard"
+             x:DataType="vm:AchievementCardViewModel"
+             x:CompileBindings="True">
+    <Grid RowDefinitions="*, *"
+          ColumnDefinitions="80, *, 100"
+          HorizontalAlignment="Stretch"
+          Background="Transparent">
+
+        <Grid.Styles>
+            <Style Selector="Border">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="BorderBrush" Value="Gray" />
+            </Style>
+
+            <Style Selector="Border.achievement-acquired">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="6" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+        </Grid.Styles>
+
+        <Border Grid.Row="0" Grid.Column="0" Classes="achievement-acquired">
+            <Border.Styles>
+                <Style Selector="Border[Tag=True]">
+                    <Setter Property="BorderThickness" Value="3" />
+                    <Setter Property="BorderBrush" Value="Gold" />
+                </Style>
+            </Border.Styles>
+            
+            <Border.Tag>
+                <Binding Path="IsCompleted" />
+            </Border.Tag>
+        
+            <Image Source="{Binding Image}"
+                   Stretch="UniformToFill"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch" />
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="1" BorderThickness="2 0">
+            <Grid RowDefinitions="20, 40"
+                  HorizontalAlignment="Stretch">
+
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <TextBlock Text="{Binding Description}" FontSize="12" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="2">
+            <PathIcon>
+                <PathIcon.Styles>
+                    <Style Selector="PathIcon">
+                        <Setter Property="Data" Value="{StaticResource star_regular}" />
+                        <Setter Property="Foreground" Value="Gray" />
+                    </Style>
+
+                    <Style Selector="PathIcon[Tag=True]">
+                        <Setter Property="Data" Value="{StaticResource star_regular_filled}" />
+                        <Setter Property="Foreground" Value="Gold" />
+                    </Style>
+                </PathIcon.Styles>
+
+                <PathIcon.Tag>
+                    <Binding Path="IsCompleted" />
+                </PathIcon.Tag>
+            </PathIcon>
+        </Border>
+
+        <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" />
+    </Grid>
+</UserControl>
