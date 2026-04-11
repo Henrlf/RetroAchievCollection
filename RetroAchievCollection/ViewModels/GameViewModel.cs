@@ -16,6 +16,7 @@ namespace RetroAchievCollection.ViewModels;
 public partial class GameViewModel : BaseViewModel
 {
     [ObservableProperty] private ObservableCollection<GameCardViewModel> _games = new();
+    [ObservableProperty] private string _searchText = "";
 
     public int ConsoleId {get; set;}
     public string ConsoleName {get; set;} = "";
@@ -26,17 +27,68 @@ public partial class GameViewModel : BaseViewModel
         LoadGames();
     }
 
+    [RelayCommand]
     public void LoadConsolesView()
     {
         _mainVm.ShowConsolesView();
     }
 
-    private void LoadGames()
+    [RelayCommand]
+    public async Task SynchronizeConsoleGames()
+    {
+        try
+        {
+            _mainVm.TextLoading = "Synchronizing...";
+            _mainVm.IsLoading = true;
+
+            SynchronizeConsoleGamesCommand command = new(_mainVm.configurationService);
+            command.ConsoleId = ConsoleId;
+            await command.execute();
+
+            await LoadGames();
+
+            _notificationService?.ShowSuccess("Console games synchronized.");
+        }
+        catch (Exception ex)
+        {
+            BaseService.SaveError(ex.ToString());
+            _notificationService?.ShowError(ex.Message);
+        }
+        finally
+        {
+            _mainVm.IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task SearchGames()
+    {
+        try
+        {
+            // TODO: SEE ABOUT THE LOADING SCREEN
+            _mainVm.TextLoading = "Loading...";
+            _mainVm.IsLoading = true;
+
+           await LoadGames(SearchText);
+        }
+        catch (Exception ex)
+        {
+            BaseService.SaveError(ex.ToString());
+            _notificationService?.ShowError(ex.Message);
+        }
+        finally
+        {
+            _mainVm.IsLoading = false;
+        }
+    }
+
+    private Task LoadGames(string searchText = "")
     {
         Games.Clear();
         ConsoleService consoleService = new();
 
         List<GameModel> games = consoleService.GetGames(ConsoleId)
+            .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderBy(a => a.IsFavorite)
             .ThenBy(a => a.Name)
             .ToList();
@@ -57,32 +109,7 @@ public partial class GameViewModel : BaseViewModel
                 ImagePath = gameModel.ImagePath
             });
         }
-    }
-
-    [RelayCommand]
-    public async Task SynchronizeConsoleGames()
-    {
-        try
-        {
-            _mainVm.TextLoading = "Synchronizing...";
-            _mainVm.IsLoading = true;
-
-            SynchronizeConsoleGamesCommand command = new(_mainVm.configurationService);
-            command.ConsoleId = ConsoleId;
-            await command.execute();
-
-            LoadGames();
-
-            _notificationService?.ShowSuccess("Console games synchronized.");
-        }
-        catch (Exception ex)
-        {
-            BaseService.SaveError(ex.ToString());
-            _notificationService?.ShowError(ex.Message);
-        }
-        finally
-        {
-            _mainVm.IsLoading = false;
-        }
+        
+        return Task.CompletedTask;
     }
 }
