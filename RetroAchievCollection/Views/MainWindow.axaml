@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels"
         Title="RetroAchievements Integration"
+        Icon="/Assets/Icons/icon.ico"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RetroAchievCollection.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
