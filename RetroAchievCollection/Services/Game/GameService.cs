@@ -31,7 +31,7 @@ public class GameService : BaseService
         return JsonSerializer.Deserialize<GameModel>(json);
     }
 
-    public GameModel SaveGameModel(GameModel? gameModel)
+    public void SaveGameModel(GameModel? gameModel)
     {
         if (gameModel == null)
         {
@@ -50,8 +50,6 @@ public class GameService : BaseService
 
         var jsonPath = Path.Combine("games", $"console_{gameModel.ConsoleId}", $"{gameModel.Id}.json");
         SaveJson(jsonPath, gameModel);
-
-        return gameModel;
     }
 
     public async Task SaveGame(GameDto gameDto)

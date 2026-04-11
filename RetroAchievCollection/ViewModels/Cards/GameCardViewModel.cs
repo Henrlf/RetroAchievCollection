@@ -70,7 +70,7 @@ public partial class GameCardViewModel : BaseViewModel
             }
 
             Name = gameModel.Name;
-            Publisher = gameModel.Publisher;
+            Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? $" / {gameModel.Publisher}" : "";
             Developer = gameModel.Developer;
             Genre = gameModel.Genre;
 
@@ -176,6 +176,31 @@ public partial class GameCardViewModel : BaseViewModel
         }
     }
 
+    [RelayCommand]
+    public void FavoriteGame()
+    {
+        try
+        {
+            IsFavorite = !IsFavorite;
+            
+            GameService gameService = new();
+            GameModel? gameModel = gameService.GetGame(Id, ConsoleId);
+
+            if (gameModel == null)
+            {
+                throw new NullReferenceException("Game was not found!");
+            }
+
+            gameModel.IsFavorite = IsFavorite;
+            gameService.SaveGameModel(gameModel);
+        }
+        catch (Exception ex)
+        {
+            BaseService.SaveError(ex.ToString());
+            _notificationService?.ShowError(ex.Message);
+        }
+    }
+    
     private void LoadAchievements()
     {
         Achievements.Clear();

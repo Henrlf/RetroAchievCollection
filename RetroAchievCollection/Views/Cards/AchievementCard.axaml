@@ -50,10 +50,10 @@
         <Border Grid.Row="0" Grid.Column="1" BorderThickness="2 0">
             <Grid RowDefinitions="20, 40"
                   HorizontalAlignment="Stretch">
-
                 <StackPanel Grid.Row="0">
                     <TextBlock Text="{Binding Name}" />
                 </StackPanel>
+                
                 <StackPanel Grid.Row="1">
                     <TextBlock Text="{Binding Description}" FontSize="12" />
                 </StackPanel>

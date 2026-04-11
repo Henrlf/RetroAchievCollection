@@ -41,7 +41,7 @@
                         <Setter Property="Height" Value="42" />
                         <Setter Property="Margin" Value="3 0" />
                         <Setter Property="BorderBrush" Value="gray" />
-                        <Setter Property="CornerRadius" Value="8" />
+                        <Setter Property="CornerRadius" Value="4" />
                         <Setter Property="BorderThickness" Value="1" />
                     </Style>
 
@@ -60,6 +60,7 @@
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="VerticalAlignment" Value="Stretch" />
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0" />
                     </Style>
 
                     <Style Selector="Button">
@@ -163,7 +164,7 @@
 
                 <!-- BUTTONS -->
                 <Border Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
-                    <Grid ColumnDefinitions="*, *"
+                    <Grid ColumnDefinitions="*, *, *"
                           VerticalAlignment="Bottom"
                           HorizontalAlignment="Stretch">
                         <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
@@ -174,6 +175,28 @@
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="1" Classes="border-button">
+                            <Button ToolTip.Tip="Favorite" Classes="btn-option"
+                                    Command="{Binding FavoriteGame}">
+                                <PathIcon>
+                                    <PathIcon.Styles>
+                                        <Style Selector="PathIcon">
+                                            <Setter Property="Data" Value="{StaticResource bookmark}" />
+                                            <Setter Property="Foreground" Value="Orange" />
+                                        </Style>
+
+                                        <Style Selector="PathIcon[Tag=True]">
+                                            <Setter Property="Data" Value="{StaticResource bookmark_filled}" />
+                                        </Style>
+                                    </PathIcon.Styles>
+
+                                    <PathIcon.Tag>
+                                        <Binding Path="IsFavorite" />
+                                    </PathIcon.Tag>
+                                </PathIcon>
+                            </Button>
+                        </Border>
+                        
+                        <Border Grid.Row="0" Grid.Column="2" Classes="border-button">
                             <Button ToolTip.Tip="Configure Play Command" Classes="btn-option"
                                     Command="{Binding ShowGameConfigurations}">
                                 <PathIcon Data="{StaticResource cog_regular}" Foreground="White" />

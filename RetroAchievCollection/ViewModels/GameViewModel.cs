@@ -89,7 +89,7 @@ public partial class GameViewModel : BaseViewModel
 
         List<GameModel> games = consoleService.GetGames(ConsoleId)
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(a => a.IsFavorite)
+            .OrderByDescending(a => a.IsFavorite)
             .ThenBy(a => a.Name)
             .ToList();
 
