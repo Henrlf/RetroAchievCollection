@@ -50,7 +50,7 @@
         </Border>
 
         <Border Grid.Row="0" Grid.Column="2" Classes="border-button">
-            <Button ToolTip.Tip="Synchronize Achievements" Classes="menu-btn"
+            <Button ToolTip.Tip="Synchronize all games" Classes="menu-btn"
                     Command="{Binding SynchronizeConsoleGames}">
                 <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
             </Button>

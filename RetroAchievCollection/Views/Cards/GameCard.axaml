@@ -61,18 +61,55 @@
                         <Setter Property="VerticalAlignment" Value="Stretch" />
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                     </Style>
+
+                    <Style Selector="Button">
+                        <Setter Property="Cursor" Value="Hand" />
+                    </Style>
                 </Grid.Styles>
 
+                <!-- IMAGE | PLAY BUTTON -->
                 <Border Grid.Column="0" Grid.RowSpan="2"
                         Classes="main-borders"
                         BorderThickness="0 , 0, 2 ,0"
                         Background="Transparent">
-                    <Image Source="{Binding GameImage}"
-                           Stretch="Uniform"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch" />
+                    <Grid>
+                        <Grid.Styles>
+                            <Style Selector="Button">
+                                <Setter Property="Background" Value="Transparent" />
+                            </Style>
+
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="Transparent" />
+                            </Style>
+
+                            <Style Selector="Button PathIcon">
+                                <Setter Property="IsVisible" Value="False" />
+                            </Style>
+
+                            <Style Selector="Button:pointerover PathIcon">
+                                <Setter Property="IsVisible" Value="True" />
+                            </Style>
+                        </Grid.Styles>
+
+                        <Image Source="{Binding GameImage}"
+                               Stretch="Uniform"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               ZIndex="0" />
+
+                        <Button ToolTip.Tip="Play game"
+                                ToolTip.ShowDelay="1000"
+                                Command="{Binding PlayGame}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                ZIndex="1">
+                            <PathIcon Data="{StaticResource play_regular_filled}"
+                                      Foreground="gray" />
+                        </Button>
+                    </Grid>
                 </Border>
 
+                <!-- INFOS -->
                 <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                         Classes="main-borders"
                         HorizontalAlignment="Left">
@@ -124,13 +161,13 @@
                     </Grid>
                 </Border>
 
-                <Border Grid.Row="0" Grid.Column="2"
-                        HorizontalAlignment="Right">
+                <!-- BUTTONS -->
+                <Border Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
                     <Grid ColumnDefinitions="*, *"
                           VerticalAlignment="Bottom"
                           HorizontalAlignment="Stretch">
                         <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
-                            <Button ToolTip.Tip="Synchronize Achievements" Classes="btn-option"
+                            <Button ToolTip.Tip="Synchronize game" Classes="btn-option"
                                     Command="{Binding SynchronizeAchievements}">
                                 <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
                             </Button>
@@ -145,6 +182,7 @@
                     </Grid>
                 </Border>
 
+                <!-- COMPLETION BAR -->
                 <Border Grid.Row="1" Grid.Column="2">
                     <Grid VerticalAlignment="Bottom"
                           HorizontalAlignment="Stretch">
@@ -177,7 +215,7 @@
             <ItemsControl ItemsSource="{Binding Achievements}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <cards:AchievementCard DataContext="{Binding}" Margin="10, 14, 10, 0" />
+                        <cards:AchievementCard DataContext="{Binding}" Margin="0 5" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

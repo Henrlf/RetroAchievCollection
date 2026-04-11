@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
@@ -42,7 +43,7 @@ public partial class GameCardViewModel : BaseViewModel
     {
         Id = gameId;
         ConsoleId = consoleId;
-        
+
         LoadAchievements();
     }
 
@@ -122,6 +123,51 @@ public partial class GameCardViewModel : BaseViewModel
             }
 
             dialog.Show();
+        }
+        catch (Exception ex)
+        {
+            BaseService.SaveError(ex.ToString());
+            _notificationService?.ShowError(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    public async Task PlayGame()
+    {
+        try
+        {
+            GameService gameService = new();
+            GameModel? gameModel = gameService.GetGame(Id, ConsoleId);
+
+            if (gameModel == null)
+            {
+                throw new NullReferenceException("Game was not found!");
+            }
+
+            if (string.IsNullOrWhiteSpace(gameModel.PlayCommand))
+            {
+                throw new NullReferenceException("Play command was not defined!");
+            }
+
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c {gameModel.PlayCommand}",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
+
+            if (process == null)
+            {
+                throw new Exception("Failed to start the game!");
+            }
+
+            await process.WaitForExitAsync();
+
+            if (process.ExitCode != 0)
+            {
+                throw new Exception("Failed to execute the command!");
+            }
         }
         catch (Exception ex)
         {
