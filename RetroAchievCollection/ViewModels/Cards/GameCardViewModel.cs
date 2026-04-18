@@ -30,6 +30,7 @@ public partial class GameCardViewModel : BaseViewModel
     [ObservableProperty] public string _releaseDate = "-";
     [ObservableProperty] public string _playCommand = "-";
     [ObservableProperty] public bool _isFavorite = false;
+    [ObservableProperty] public string _trophyIconPath = "/Assets/trophy.svg";
 
     [ObservableProperty] public int _achievementsCount;
     [ObservableProperty] public int _achievementsCompleted;
@@ -228,6 +229,11 @@ public partial class GameCardViewModel : BaseViewModel
         AchievementsCount = gameModel.TotalAchievements;
         AchievementsCompleted = gameModel.TotalAchievementsCompleted;
 
+        if (AchievementsCount == AchievementsCompleted)
+        {
+            TrophyIconPath = "/Assets/trophy_filled.svg";
+        }
+        
         double result = (double)AchievementsCompleted / AchievementsCount * 150;
         AchievProgressPercentage = (int)result;
     }

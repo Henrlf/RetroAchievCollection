@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Cards"
              xmlns:cards="clr-namespace:RetroAchievCollection.Views.Cards"
+             xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Avalonia.Svg.Skia"
              mc:Ignorable="d"
              x:Class="RetroAchievCollection.Views.Cards.GameCard"
              x:DataType="vm:GameCardViewModel"
@@ -23,7 +24,7 @@
 
         <!-- CARD -->
         <Expander.Header>
-            <Grid ColumnDefinitions="100, *, 150"
+            <Grid ColumnDefinitions="100, *, 200"
                   RowDefinitions="*, *">
                 <Grid.Styles>
                     <Style Selector="Border.main-borders">
@@ -48,7 +49,7 @@
                     <Style Selector="Border.bar-progeress">
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                         <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="Margin" Value="0, 5" />
+                        <Setter Property="Margin" Value="0 5" />
                         <Setter Property="Padding" Value="0" />
                         <Setter Property="Background" Value="Gray" />
                         <Setter Property="Height" Value="10" />
@@ -167,14 +168,9 @@
                     <Grid ColumnDefinitions="*, *, *"
                           VerticalAlignment="Bottom"
                           HorizontalAlignment="Stretch">
-                        <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
-                            <Button ToolTip.Tip="Synchronize game" Classes="btn-option"
-                                    Command="{Binding SynchronizeAchievements}">
-                                <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
-                            </Button>
-                        </Border>
 
-                        <Border Grid.Row="0" Grid.Column="1" Classes="border-button">
+                        <!-- FAVORITE -->
+                        <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
                             <Button ToolTip.Tip="Favorite" Classes="btn-option"
                                     Command="{Binding FavoriteGame}">
                                 <PathIcon>
@@ -195,7 +191,16 @@
                                 </PathIcon>
                             </Button>
                         </Border>
-                        
+
+                        <!-- SYNCHRONIZE -->
+                        <Border Grid.Row="0" Grid.Column="1" Classes="border-button">
+                            <Button ToolTip.Tip="Synchronize game" Classes="btn-option"
+                                    Command="{Binding SynchronizeAchievements}">
+                                <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
+                            </Button>
+                        </Border>
+
+                        <!-- CONFIGURATION -->
                         <Border Grid.Row="0" Grid.Column="2" Classes="border-button">
                             <Button ToolTip.Tip="Configure Play Command" Classes="btn-option"
                                     Command="{Binding ShowGameConfigurations}">
@@ -206,30 +211,41 @@
                 </Border>
 
                 <!-- COMPLETION BAR -->
-                <Border Grid.Row="1" Grid.Column="2">
-                    <Grid VerticalAlignment="Bottom"
-                          HorizontalAlignment="Stretch">
-                        <Grid RowDefinitions="*, *">
-                            <Border Grid.Row="0" HorizontalAlignment="Right">
-                                <TextBlock>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0}/{1}">
-                                            <Binding Path="AchievementsCompleted" />
-                                            <Binding Path="AchievementsCount" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </Border>
+                <Grid Grid.Row="1" Grid.Column="2"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Bottom"
+                      ColumnDefinitions="*, 40">
 
-                            <Border Grid.Row="1" Classes="bar-progeress">
-                                <Border Classes="bar-progeress"
-                                        HorizontalAlignment="Left"
-                                        Background="Orange"
-                                        Width="{Binding AchievProgressPercentage}" />
-                            </Border>
-                        </Grid>
+                    <Grid Grid.Column="0" HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          RowDefinitions="*, *">
+                        <Border Grid.Row="0" HorizontalAlignment="Right">
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                        <Binding Path="AchievementsCompleted" />
+                                        <Binding Path="AchievementsCount" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Border>
+
+                        <Border Grid.Row="1" Classes="bar-progeress">
+                            <Border Classes="bar-progeress"
+                                    HorizontalAlignment="Left"
+                                    Background="Orange"
+                                    Width="{Binding AchievProgressPercentage}" />
+                        </Border>
                     </Grid>
-                </Border>
+
+                    <Border Grid.Column="1"
+                            Padding="5 0 0 6">
+                        <Viewbox Width="32">
+                            <!-- <svg:Svg Path="{Binding TrophyIconPath}" /> -->
+                            <svg:Svg Path="/Assets/trophy_filled.svg" />
+                        </Viewbox>
+                    </Border>
+                </Grid>
             </Grid>
         </Expander.Header>
 

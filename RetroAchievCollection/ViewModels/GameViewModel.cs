@@ -69,7 +69,7 @@ public partial class GameViewModel : BaseViewModel
             _mainVm.TextLoading = "Loading...";
             _mainVm.IsLoading = true;
 
-           await LoadGames(SearchText);
+            await LoadGames(SearchText);
         }
         catch (Exception ex)
         {
@@ -100,7 +100,7 @@ public partial class GameViewModel : BaseViewModel
                 Id = gameModel.Id,
                 ConsoleId = gameModel.ConsoleId,
                 Name = gameModel.Name,
-                Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? " / " + gameModel.Publisher : "",
+                Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? $" / {gameModel.Publisher}" : "",
                 Developer = gameModel.Developer,
                 Genre = gameModel.Genre,
                 ReleaseDate = DateOnly.TryParse(gameModel.Released, out var d) ? d.ToString("dd/MM/yyyy") : "",
@@ -109,7 +109,7 @@ public partial class GameViewModel : BaseViewModel
                 ImagePath = gameModel.ImagePath
             });
         }
-        
+
         return Task.CompletedTask;
     }
 }
