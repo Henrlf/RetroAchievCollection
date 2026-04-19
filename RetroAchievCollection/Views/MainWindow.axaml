@@ -45,11 +45,20 @@
                 </Menu>
             </Grid>
 
-            <ContentControl Content="{Binding CurrentView}"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Stretch"/>
+            <TabControl>
+                <TabItem Header="Consoles" Margin="10 0 0 0">
+                    <Grid RowDefinitions="1, *" >
+                        <ContentControl Grid.Row="1" Content="{Binding CurrentView}"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"/>
+                    </Grid>
+                </TabItem>
+
+                <!-- <TabItem Header="Favorite" /> -->
+                <!-- <TabItem Header="Games" /> -->
+            </TabControl>
         </DockPanel>
-        
+
         <Border IsVisible="{Binding IsLoading}"
                 Background="#AA000000"
                 ZIndex="10">

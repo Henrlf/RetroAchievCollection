@@ -30,7 +30,9 @@ public partial class GameCardViewModel : BaseViewModel
     [ObservableProperty] public string _releaseDate = "-";
     [ObservableProperty] public string _playCommand = "-";
     [ObservableProperty] public bool _isFavorite = false;
+    
     [ObservableProperty] public string _trophyIconPath = "/Assets/trophy.svg";
+    [ObservableProperty] public bool _hasPlayCommand = false;
 
     [ObservableProperty] public int _achievementsCount;
     [ObservableProperty] public int _achievementsCompleted;
@@ -53,8 +55,7 @@ public partial class GameCardViewModel : BaseViewModel
     {
         try
         {
-            _mainVm.TextLoading = "Synchronizing...";
-            _mainVm.IsLoading = true;
+            _mainVm.ShowLoadingScreen("Synchronizing...");
 
             SynchronizeGameCommand command = new(_mainVm.configurationService)
             {
@@ -92,7 +93,7 @@ public partial class GameCardViewModel : BaseViewModel
         }
         finally
         {
-            _mainVm.IsLoading = false;
+            _mainVm.HideLoadingScreen();
         }
     }
 
@@ -226,15 +227,16 @@ public partial class GameCardViewModel : BaseViewModel
             });
         }
 
+        HasPlayCommand = !string.IsNullOrWhiteSpace(gameModel.PlayCommand);
         AchievementsCount = gameModel.TotalAchievements;
         AchievementsCompleted = gameModel.TotalAchievementsCompleted;
-
+        
+        double result = (double)AchievementsCompleted / AchievementsCount * 150;
+        AchievProgressPercentage = (int)result;
+        
         if (AchievementsCount == AchievementsCompleted)
         {
             TrophyIconPath = "/Assets/trophy_filled.svg";
         }
-        
-        double result = (double)AchievementsCompleted / AchievementsCount * 150;
-        AchievProgressPercentage = (int)result;
     }
 }

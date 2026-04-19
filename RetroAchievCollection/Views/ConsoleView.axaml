@@ -9,41 +9,61 @@
              x:DataType="vm:ConsoleViewModel"
              x:CompileBindings="True">
 
-    <Grid RowDefinitions="50, Auto, *">
-        <Grid.Styles>
-            <Style Selector="Border.border-button">
-                <Setter Property="HorizontalAlignment" Value="Right" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="Width" Value="42" />
-                <Setter Property="Height" Value="42" />
-                <Setter Property="Margin" Value="10" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="BorderBrush" Value="gray" />
-                <Setter Property="CornerRadius" Value="4" />
-                <Setter Property="BorderThickness" Value="1" />
-            </Style>
+    <Grid RowDefinitions="1, Auto, *">
+        <Separator Grid.Row="0" Margin="10 0" />
 
-            <Style Selector="Button.sync-button">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="VerticalAlignment" Value="Stretch" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-            </Style>
-        </Grid.Styles>
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*, 400, Auto, Auto"
+              Margin="10 6">
+            <Grid.Styles>
+                <Style Selector="StackPanel">
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
 
-        <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
-            <Button ToolTip.Tip="Synchronize Consoles" Classes="sync-button"
-                    Command="{Binding SynchronizeConsoles}">
-                <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
-            </Button>
-        </Border>
+                <Style Selector="TextBox">
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Height" Value="40" />
+                    <Setter Property="AcceptsReturn" Value="False" />
+                    <Setter Property="TextWrapping" Value="NoWrap" />
+                    <Setter Property="SelectionBrush" Value="LightGray" />
+                    <Setter Property="SelectionForegroundBrush" Value="Black" />
+                </Style>
+            </Grid.Styles>
 
-        <Separator Grid.Row="1" Margin="10, 5" />
+            <!-- SEARCH BAR -->
+            <StackPanel Grid.Column="1">
+                <TextBox Watermark="Search..." Text="{Binding SearchTextConsoles}">
+                    <TextBox.KeyBindings>
+                        <KeyBinding Gesture="Enter" Command="{Binding SearchConsoles}" />
+                    </TextBox.KeyBindings>
+                </TextBox>
+            </StackPanel>
+
+            <!-- SEARCH BUTTON -->
+            <Border Grid.Column="2" Classes="border-button">
+                <Button ToolTip.Tip="Search" Classes="base-button"
+                        Command="{Binding SearchConsoles}">
+                    <PathIcon Data="{StaticResource search}" Foreground="White" />
+                </Button>
+            </Border>
+
+            <!-- SYNCHRONIZE BUTTON -->
+            <Border Grid.Column="3" Classes="border-button">
+                <Button ToolTip.Tip="Synchronize Consoles" Classes="base-button"
+                        Command="{Binding SynchronizeConsoles}">
+                    <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
+                </Button>
+            </Border>
+        </Grid>
 
         <ScrollViewer Grid.Row="2">
             <ItemsControl ItemsSource="{Binding Consoles}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <components:ConsoleCard DataContext="{Binding}" Margin="0 5"/>
+                        <components:ConsoleCard DataContext="{Binding}" Margin="0 5" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

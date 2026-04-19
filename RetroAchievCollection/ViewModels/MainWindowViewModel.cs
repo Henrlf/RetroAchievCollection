@@ -24,6 +24,7 @@ public partial class MainWindowViewModel : ObservableObject
     public INotificationService NotificationService {get;}
     public IRelayCommand LoadConsoleView {get;}
     public IRelayCommand<int> LoadGameView {get;}
+    public ConsoleViewModel? ConsoleViewCache {get; private set;}
 
     public MainWindowViewModel(INotificationService notificationService)
     {
@@ -36,7 +37,12 @@ public partial class MainWindowViewModel : ObservableObject
 
     public void ShowConsolesView()
     {
-        CurrentView = new ConsoleViewModel(this);
+        if (ConsoleViewCache == null)
+        {
+            ConsoleViewCache = new ConsoleViewModel(this);
+        }
+
+        CurrentView = ConsoleViewCache;
     }
 
     public void ShowGameView(int consoleId)
@@ -50,6 +56,17 @@ public partial class MainWindowViewModel : ObservableObject
         };
     }
 
+    public void ShowLoadingScreen(string text)
+    {
+        TextLoading = text;
+        IsLoading = true;
+    }
+
+    public void HideLoadingScreen()
+    {
+        IsLoading = false;
+    }
+    
     [RelayCommand]
     public async Task ShowConfigurations()
     {

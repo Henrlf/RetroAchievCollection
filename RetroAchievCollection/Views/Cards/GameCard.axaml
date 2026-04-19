@@ -70,7 +70,7 @@
                 </Grid.Styles>
 
                 <!-- IMAGE | PLAY BUTTON -->
-                <Border Grid.Column="0" Grid.RowSpan="2"
+                <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
                         Classes="main-borders"
                         BorderThickness="0 , 0, 2 ,0"
                         Background="Transparent">
@@ -105,8 +105,22 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 ZIndex="1">
-                            <PathIcon Data="{StaticResource play_regular_filled}"
-                                      Foreground="gray" />
+                            <PathIcon>
+                                <PathIcon.Styles>
+                                    <Style Selector="PathIcon">
+                                        <Setter Property="Data" Value="{StaticResource play_regular_filled}" />
+                                        <Setter Property="Foreground" Value="Gray" />
+                                    </Style>
+
+                                    <Style Selector="PathIcon[Tag=True]">
+                                        <Setter Property="Foreground" Value="ForestGreen" />
+                                    </Style>
+                                </PathIcon.Styles>
+
+                                <PathIcon.Tag>
+                                    <Binding Path="HasPlayCommand" />
+                                </PathIcon.Tag>
+                            </PathIcon>
                         </Button>
                     </Grid>
                 </Border>
@@ -238,11 +252,9 @@
                         </Border>
                     </Grid>
 
-                    <Border Grid.Column="1"
-                            Padding="5 0 0 6">
+                    <Border Grid.Column="1" Padding="5 0 0 6">
                         <Viewbox Width="32">
-                            <!-- <svg:Svg Path="{Binding TrophyIconPath}" /> -->
-                            <svg:Svg Path="/Assets/trophy_filled.svg" />
+                            <svg:Svg Path="{Binding TrophyIconPath}" />
                         </Viewbox>
                     </Border>
                 </Grid>

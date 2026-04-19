@@ -9,76 +9,49 @@
              x:DataType="vm:GameViewModel"
              x:CompileBindings="True">
 
-    <Grid RowDefinitions="50, 50, Auto, *"
-          ColumnDefinitions="*, *, *, *">
-        <Grid.Styles>
-            <Style Selector="Border.border-button">
-                <Setter Property="HorizontalAlignment" Value="Right" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="Width" Value="40" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Margin" Value="10" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="BorderBrush" Value="gray" />
-                <Setter Property="CornerRadius" Value="4" />
-                <Setter Property="BorderThickness" Value="1" />
-            </Style>
+    <Grid RowDefinitions="1, Auto, *">
+        <Separator Grid.Row="0" Margin="10 0" />
 
-            <Style Selector="Button.menu-btn">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="VerticalAlignment" Value="Stretch" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-            </Style>
-        </Grid.Styles>
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*, Auto, *"
+              Margin="10 6">
+            
+            <!-- SEE CONSOLES BUTTON -->
+            <Border Grid.Column="0"
+                    Classes="border-button"
+                    HorizontalAlignment="Left"
+                    Margin="0">
+                <Button ToolTip.Tip="Show Consoles"
+                        Classes="base-button"
+                        Command="{Binding LoadConsolesView}">
+                    <PathIcon Data="{StaticResource left_arrow}" Foreground="White" />
+                </Button>
+            </Border>
 
-        <!-- SEE CONSOLES BUTTON -->
-        <Border Grid.Row="0" Grid.Column="0" Classes="border-button" HorizontalAlignment="Left">
-            <Button ToolTip.Tip="Show Consoles" Classes="menu-btn"
-                    Command="{Binding LoadConsolesView}">
-                <PathIcon Data="{StaticResource left_arrow}" Foreground="White" />
-            </Button>
-        </Border>
+            <!-- CONSOLE NAME -->
+            <Border Grid.Column="1" VerticalAlignment="Center">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding ConsoleName}"
+                               FontSize="16"
+                               FontWeight="Bold" />
+                </StackPanel>
+            </Border>
 
-        <!-- CONSOLE NAME -->
-        <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center">
-            <StackPanel VerticalAlignment="Center"
-                        HorizontalAlignment="Center">
-                <TextBlock Text="{Binding ConsoleName}"
-                           FontSize="16"
-                           FontWeight="Bold" />
-            </StackPanel>
-        </Border>
-
-        <!-- SYNCHRONIZE BUTTON -->
-        <Border Grid.Row="0" Grid.Column="3" Classes="border-button">
-            <Button ToolTip.Tip="Synchronize all games" Classes="menu-btn"
-                    Command="{Binding SynchronizeConsoleGames}">
-                <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
-            </Button>
-        </Border>
-
-        <!-- SEARCH BAR -->
-        <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
-            <Grid ColumnDefinitions="*, 50"
-                  Margin="20 0">
+            <Grid Grid.Column="2"
+                  HorizontalAlignment="Right"
+                  ColumnDefinitions="*, Auto, Auto">
                 <Grid.Styles>
                     <Style Selector="StackPanel">
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                         <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="Margin" Value="0 0 4 0" />
-                    </Style>
-
-                    <Style Selector="Button">
-                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="CornerRadius" Value="4" />
                     </Style>
 
                     <Style Selector="TextBox">
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                         <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Height" Value="40" />
                         <Setter Property="AcceptsReturn" Value="False" />
                         <Setter Property="TextWrapping" Value="NoWrap" />
                         <Setter Property="SelectionBrush" Value="LightGray" />
@@ -86,27 +59,38 @@
                     </Style>
                 </Grid.Styles>
 
-                <StackPanel Grid.Column="0">
-                    <TextBox Watermark="Search..." Text="{Binding SearchText}">
+                <!-- SEARCH BAR -->
+                <StackPanel Grid.Column="0"
+                            Width="400">
+                    <TextBox Watermark="Search..." Text="{Binding SearchTextGames}">
                         <TextBox.KeyBindings>
                             <KeyBinding Gesture="Enter" Command="{Binding SearchGames}" />
                         </TextBox.KeyBindings>
                     </TextBox>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1">
-                    <Button Command="{Binding SearchGames}">
+                <!-- SEARCH BUTTON -->
+                <Border Grid.Column="1" Classes="border-button">
+                    <Button ToolTip.Tip="Search"
+                            Classes="base-button"
+                            Command="{Binding SearchGames}">
                         <PathIcon Data="{StaticResource search}" Foreground="White" />
                     </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
+                </Border>
 
-        <!-- SEPARATOR -->
-        <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="10, 5" />
+                <!-- SYNCHRONIZE BUTTON -->
+                <Border Grid.Column="2" Classes="border-button">
+                    <Button ToolTip.Tip="Synchronize all games"
+                            Classes="base-button"
+                            Command="{Binding SynchronizeConsoleGames}">
+                        <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
+                    </Button>
+                </Border>
+            </Grid>
+        </Grid>
 
         <!-- GAME CARDS -->
-        <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4">
+        <ScrollViewer Grid.Row="2">
             <ItemsControl ItemsSource="{Binding Games}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

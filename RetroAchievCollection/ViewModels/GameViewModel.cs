@@ -16,7 +16,7 @@ namespace RetroAchievCollection.ViewModels;
 public partial class GameViewModel : BaseViewModel
 {
     [ObservableProperty] private ObservableCollection<GameCardViewModel> _games = new();
-    [ObservableProperty] private string _searchText = "";
+    [ObservableProperty] private string _searchTextGames = "";
 
     public int ConsoleId {get; set;}
     public string ConsoleName {get; set;} = "";
@@ -38,8 +38,7 @@ public partial class GameViewModel : BaseViewModel
     {
         try
         {
-            _mainVm.TextLoading = "Synchronizing...";
-            _mainVm.IsLoading = true;
+            _mainVm.ShowLoadingScreen("Synchronizing...");
 
             SynchronizeConsoleGamesCommand command = new(_mainVm.configurationService);
             command.ConsoleId = ConsoleId;
@@ -56,7 +55,7 @@ public partial class GameViewModel : BaseViewModel
         }
         finally
         {
-            _mainVm.IsLoading = false;
+            _mainVm.HideLoadingScreen();
         }
     }
 
@@ -66,10 +65,9 @@ public partial class GameViewModel : BaseViewModel
         try
         {
             // TODO: SEE ABOUT THE LOADING SCREEN
-            _mainVm.TextLoading = "Loading...";
-            _mainVm.IsLoading = true;
+            _mainVm.ShowLoadingScreen("Loading...");
 
-            await LoadGames(SearchText);
+            await LoadGames(SearchTextGames);
         }
         catch (Exception ex)
         {
@@ -78,7 +76,7 @@ public partial class GameViewModel : BaseViewModel
         }
         finally
         {
-            _mainVm.IsLoading = false;
+            _mainVm.HideLoadingScreen();
         }
     }
 
