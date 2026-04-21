@@ -10,6 +10,7 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Game;
+using RetroAchievCollection.Enum;
 using RetroAchievCollection.Models;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Game;
@@ -30,7 +31,7 @@ public partial class GameCardViewModel : BaseViewModel
     [ObservableProperty] public string _releaseDate = "-";
     [ObservableProperty] public string _playCommand = "-";
     [ObservableProperty] public bool _isFavorite = false;
-    
+
     [ObservableProperty] public string _trophyIconPath = "/Assets/trophy.svg";
     [ObservableProperty] public bool _hasPlayCommand = false;
 
@@ -108,7 +109,7 @@ public partial class GameCardViewModel : BaseViewModel
                 Height = 200,
                 CanResize = false,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                DataContext = new GameConfigurationWindowModel(_mainVm, Id, ConsoleId)
+                DataContext = new GameConfigurationWindowModel(_mainVm, this)
             };
 
             Window? owner = null;
@@ -184,7 +185,7 @@ public partial class GameCardViewModel : BaseViewModel
         try
         {
             IsFavorite = !IsFavorite;
-            
+
             GameService gameService = new();
             GameModel? gameModel = gameService.GetGame(Id, ConsoleId);
 
@@ -202,7 +203,7 @@ public partial class GameCardViewModel : BaseViewModel
             _notificationService?.ShowError(ex.Message);
         }
     }
-    
+
     private void LoadAchievements()
     {
         Achievements.Clear();
@@ -216,24 +217,34 @@ public partial class GameCardViewModel : BaseViewModel
 
         foreach (var achievementModel in gameModel.Achievements)
         {
+            AchievementStatus achievementStatus = AchievementStatus.NotCompleted;
+
+            if (achievementModel.IsCompletedHardcore)
+            {
+                achievementStatus = AchievementStatus.CompletedHardcore;
+            }
+            else if (achievementModel.IsCompleted)
+            {
+                achievementStatus = AchievementStatus.Completed;
+            }
+
             Achievements.Add(new AchievementCardViewModel(_mainVm)
             {
                 Id = achievementModel.Id,
                 Name = achievementModel.Name,
                 Description = achievementModel.Description,
                 ImagePath = achievementModel.ImagePath,
-                IsCompleted = achievementModel.IsCompleted,
-                IsCompletedHardcore = achievementModel.IsCompletedHardcore,
+                Status = achievementStatus
             });
         }
 
         HasPlayCommand = !string.IsNullOrWhiteSpace(gameModel.PlayCommand);
         AchievementsCount = gameModel.TotalAchievements;
         AchievementsCompleted = gameModel.TotalAchievementsCompleted;
-        
+
         double result = (double)AchievementsCompleted / AchievementsCount * 150;
         AchievProgressPercentage = (int)result;
-        
+
         if (AchievementsCount == AchievementsCompleted)
         {
             TrophyIconPath = "/Assets/trophy_filled.svg";

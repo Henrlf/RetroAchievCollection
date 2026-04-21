@@ -216,9 +216,25 @@
 
                         <!-- CONFIGURATION -->
                         <Border Grid.Row="0" Grid.Column="2" Classes="border-button">
-                            <Button ToolTip.Tip="Configure Play Command" Classes="btn-option"
-                                    Command="{Binding ShowGameConfigurations}">
-                                <PathIcon Data="{StaticResource cog_regular}" Foreground="White" />
+                            <Button ToolTip.Tip="Configure Play Command"
+                                    Command="{Binding ShowGameConfigurations}"
+                                    Classes="btn-option">
+                                <PathIcon>
+                                    <PathIcon.Styles>
+                                        <Style Selector="PathIcon">
+                                            <Setter Property="Data" Value="{StaticResource cog_regular}" />
+                                            <Setter Property="Foreground" Value="Gray" />
+                                        </Style>
+
+                                        <Style Selector="PathIcon[Tag=True]">
+                                            <Setter Property="Foreground" Value="White" />
+                                        </Style>
+                                    </PathIcon.Styles>
+
+                                    <PathIcon.Tag>
+                                        <Binding Path="HasPlayCommand" />
+                                    </PathIcon.Tag>
+                                </PathIcon>
                             </Button>
                         </Border>
                     </Grid>
