@@ -99,11 +99,7 @@ public partial class GameViewModel : BaseViewModel
 
         foreach (var gameModel in gameModels)
         {
-            Games.Add(new GameCardViewModel(_mainVm, gameModel)
-            {
-                Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? $" / {gameModel.Publisher}" : "",
-                ReleaseDate = gameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-"
-            });
+            Games.Add(new GameCardViewModel(_mainVm, gameModel));
         }
     }
 }

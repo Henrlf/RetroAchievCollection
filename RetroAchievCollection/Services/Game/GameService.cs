@@ -20,6 +20,7 @@ public class GameService : BaseService
         using var db = new AppDbContext();
 
         return await db.Games
+            .Include(g => g.Achievements)
             .Where(c => c.ConsoleId == consoleId)
             .ToListAsync();
     }
@@ -50,8 +51,10 @@ public class GameService : BaseService
         {
             throw new NullReferenceException("Console does not exist!");
         }
-        
-        GameModel? gameModel = await db.Games.SingleOrDefaultAsync(g => g.CodeIntegration == gameDto.CodeIntegration);
+
+        GameModel? gameModel = await db.Games
+            .Include(g => g.Achievements)
+            .SingleOrDefaultAsync(g => g.CodeIntegration == gameDto.CodeIntegration);
 
         if (gameModel == null)
         {
@@ -163,7 +166,7 @@ public class GameService : BaseService
 
     // ----------------------------------------------------------------------------------------------------------------
     // TODO: REMOVE 
-    
+
     // public GameModel? GetGame(int gameId, int consoleId)
     // {
     //     if (consoleId == 0 || gameId == 0)

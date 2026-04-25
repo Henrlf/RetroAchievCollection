@@ -20,15 +20,23 @@ namespace RetroAchievCollection.ViewModels.Cards;
 
 public partial class GameCardViewModel : BaseViewModel
 {
-    [ObservableProperty] public GameModel _gameModel = new();
+    [ObservableProperty] public string _name = "";
     [ObservableProperty] public string _publisher = "";
+    [ObservableProperty] public string _developer = "";
+    [ObservableProperty] public string _genre = "";
     [ObservableProperty] public string _releaseDate = "-";
+    [ObservableProperty] public string _playCommand = "-";
+    [ObservableProperty] public bool _isFavorite = false;
 
     [ObservableProperty] public string _trophyIconPath = "/Assets/trophy.svg";
     [ObservableProperty] public bool _hasPlayCommand = false;
+
+    [ObservableProperty] public int _achievementsCount;
+    [ObservableProperty] public int _achievementsCompleted;
     [ObservableProperty] public int _achievProgressPercentage;
     [ObservableProperty] public ObservableCollection<AchievementCardViewModel> _achievements = new();
 
+    public GameModel GameModel {get; set;}
     public Bitmap? GameImage => File.Exists(GameModel.ImagePath) ? new Bitmap(GameModel.ImagePath) : null;
 
     public GameCardViewModel(MainWindowViewModel mainVm, GameModel gameModel) : base(mainVm)
@@ -61,9 +69,8 @@ public partial class GameCardViewModel : BaseViewModel
             }
 
             GameModel = gameModel;
-            Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? $" / {gameModel.Publisher}" : "";
-            ReleaseDate = gameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-";
 
+            LoadValues();
             LoadAchievements();
 
             _notificationService?.ShowSuccess("Game achievements synchronized.");
@@ -167,7 +174,9 @@ public partial class GameCardViewModel : BaseViewModel
                 throw new NullReferenceException("Game was not found!");
             }
 
-            GameModel.IsFavorite = !GameModel.IsFavorite;
+
+            IsFavorite = !IsFavorite;
+            GameModel.IsFavorite = IsFavorite;
 
             GameService gameService = new();
             gameService.SaveGameModel(GameModel);
@@ -181,14 +190,22 @@ public partial class GameCardViewModel : BaseViewModel
 
     private void LoadValues()
     {
-        HasPlayCommand = !string.IsNullOrWhiteSpace(GameModel.PlayCommand);
-        var achievementsCount = GameModel.AchievementsCount;
-        var achievementsCompleted = GameModel.AchievementsCompleted;
+        Name = GameModel.Name;
+        Developer = GameModel.Developer ?? "";
+        Genre = GameModel.Genre ?? "";
+        PlayCommand = GameModel.PlayCommand;
+        AchievementsCount = GameModel.AchievementsCount;
+        AchievementsCompleted = GameModel.AchievementsCompleted;
+        IsFavorite = GameModel.IsFavorite;
 
-        double result = (double)achievementsCompleted / achievementsCount * 150;
+        Publisher = !string.IsNullOrWhiteSpace(GameModel.Publisher) ? $" / {GameModel.Publisher}" : "";
+        ReleaseDate = GameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-";
+        HasPlayCommand = !string.IsNullOrWhiteSpace(GameModel.PlayCommand);
+
+        double result = (double)AchievementsCompleted / AchievementsCount * 150;
         AchievProgressPercentage = (int)result;
 
-        if (achievementsCount == achievementsCompleted)
+        if (AchievementsCount > 0 && AchievementsCount == AchievementsCompleted)
         {
             TrophyIconPath = "/Assets/trophy_filled.svg";
         }

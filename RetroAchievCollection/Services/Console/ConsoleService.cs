@@ -17,7 +17,7 @@ public class ConsoleService : BaseService
         using var db = new AppDbContext();
         return await db.Consoles.FindAsync(consoleId);
     }
-    
+
     public async Task<List<ConsoleModel>> GetConsoles()
     {
         using var db = new AppDbContext();
@@ -26,38 +26,44 @@ public class ConsoleService : BaseService
             .ToListAsync();
     }
 
-    public async Task SaveConsoles(List<ConsoleDto> consolesDto)
+    public async Task SaveConsoleDto(ConsoleDto consoleDto)
     {
         using var db = new AppDbContext();
 
-        foreach (var consoleDto in consolesDto)
+        var consoleModel = db.Consoles.FirstOrDefault(c => c.CodeIntegration == consoleDto.CodeIntegration);
+
+        if (consoleModel == null)
         {
-            var consoleModel = db.Consoles.FirstOrDefault(c => c.CodeIntegration == consoleDto.CodeIntegration);
+            consoleModel = new ConsoleModel();
+        }
 
-            if (consoleModel == null)
+        consoleModel.CodeIntegration = consoleDto.CodeIntegration;
+        consoleModel.Name = consoleDto.Name;
+
+        if ((string.IsNullOrWhiteSpace(consoleModel.ImagePath) || !File.Exists(consoleModel.ImagePath))
+            && !string.IsNullOrWhiteSpace(consoleDto.ImageUrl))
+        {
+            try
             {
-                consoleModel = new ConsoleModel();
+                var extension = Path.GetExtension(new Uri(consoleDto.ImageUrl).AbsolutePath);
+                var imagePath = Path.Combine(MainDirectory, "images", "console", consoleModel.CodeIntegration + extension);
+
+                await SaveImageAsync(consoleDto.ImageUrl, imagePath);
+                consoleModel.ImagePath = imagePath;
             }
-
-            consoleModel.CodeIntegration = consoleDto.CodeIntegration;
-            consoleModel.Name = consoleDto.Name;
-
-            if ((string.IsNullOrWhiteSpace(consoleModel.ImagePath) || !File.Exists(consoleModel.ImagePath))
-                && !string.IsNullOrWhiteSpace(consoleDto.ImageUrl))
+            catch (Exception e)
             {
-                try
-                {
-                    var extension = Path.GetExtension(new Uri(consoleDto.ImageUrl).AbsolutePath);
-                    var imagePath = Path.Combine(MainDirectory, "images", "console", consoleModel.CodeIntegration + extension);
-
-                    await SaveImageAsync(consoleDto.ImageUrl, imagePath);
-                    consoleModel.ImagePath = imagePath;
-                }
-                catch (Exception e)
-                {
-                    SaveError(e.ToString());
-                }
+                SaveError(e.ToString());
             }
+        }
+
+        if (consoleModel.Id == Guid.Empty)
+        {
+            db.Consoles.Add(consoleModel);
+        }
+        else
+        {
+            db.Consoles.Update(consoleModel);
         }
 
         await db.SaveChangesAsync();
@@ -65,7 +71,7 @@ public class ConsoleService : BaseService
 
     // ----------------------------------------------------------------------------------------------------------------
     // TODO: REMOVE
-    
+
     // public List<ConsoleModel> GetConsoles()
     // {
     //     string json = LoadJson("consoles.json");

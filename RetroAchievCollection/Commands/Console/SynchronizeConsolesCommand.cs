@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using RetroAchievCollection.RetroAchievements.Services;
 using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.Services.User;
@@ -18,6 +20,21 @@ public class SynchronizeConsolesCommand
     public async Task execute()
     {
         var consolesDto = await RetroAchievementsService.getConsolesAsync(1);
-        await ConsoleService.SaveConsoles(consolesDto);
+        var semaphore = new SemaphoreSlim(5);
+
+        await Task.WhenAll(consolesDto.Select(async consoleDto =>
+        {
+            await semaphore.WaitAsync();
+
+            try
+            {
+                await ConsoleService.SaveConsoleDto(consoleDto);
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }));
+
     }
 }

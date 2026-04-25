@@ -35,8 +35,9 @@ public partial class ConsoleViewModel : BaseViewModel
             SynchronizeConsolesCommand command = new(_mainVm.configurationService);
             await command.execute();
 
+            await LoadConsoles(SearchTextConsoles);
+            
             _notificationService?.ShowSuccess("Consoles synchronized.");
-            _mainVm.ShowConsolesView();
         }
         catch (Exception ex)
         {

@@ -141,7 +141,7 @@
                                 BorderBrush="Gray"
                                 Margin="0 0 0 5">
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{Binding GameModel.Name}"
+                                <TextBlock Text="{Binding Name}"
                                            FontSize="16"
                                            FontWeight="Bold" />
                             </StackPanel>
@@ -151,7 +151,7 @@
                             <TextBlock Text="Genre: " />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1">
-                            <TextBlock Text="{Binding GameModel.Genre}" />
+                            <TextBlock Text="{Binding Genre}" />
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Grid.Column="0">
@@ -161,7 +161,7 @@
                             <TextBlock>
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0} {1}">
-                                        <Binding Path="GameModel.Developer" />
+                                        <Binding Path="Developer" />
                                         <Binding Path="Publisher" />
                                     </MultiBinding>
                                 </TextBlock.Text>
@@ -200,7 +200,7 @@
                                     </PathIcon.Styles>
 
                                     <PathIcon.Tag>
-                                        <Binding Path="GameModel.IsFavorite" />
+                                        <Binding Path="IsFavorite" />
                                     </PathIcon.Tag>
                                 </PathIcon>
                             </Button>
@@ -253,8 +253,8 @@
                             <TextBlock>
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                        <Binding Path="GameModel.AchievementsCompleted" />
-                                        <Binding Path="GameModel.AchievementsCount" />
+                                        <Binding Path="AchievementsCompleted" />
+                                        <Binding Path="AchievementsCount" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
