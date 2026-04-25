@@ -12,7 +12,7 @@ public class SynchronizeGameCommand
     public readonly RetroAchievementsService RetroAchievementsService;
     public readonly GameService GameService = new();
 
-    public int GameId {get; set;}
+    public int GameCodeIntegration {get; set;}
     public GameModel? GameModel {get; protected set;}
 
     public SynchronizeGameCommand(ConfigurationService configurationService)
@@ -22,13 +22,13 @@ public class SynchronizeGameCommand
 
     public async Task execute()
     {
-        if (GameId == 0)
+        if (GameCodeIntegration == 0)
         {
             throw new ArgumentException("Game Id must be specified!");
         }
 
-        var gameDto = await RetroAchievementsService.getGameAndAchievementsAsync(GameId);
-        
-        GameModel = await GameService.SaveGameAndAchievements(gameDto);
+        var gameDto = await RetroAchievementsService.getGameAndAchievementsAsync(GameCodeIntegration);
+
+        GameModel = await GameService.SaveGameDto(gameDto, gameDto.ConsoleId);
     }
 }

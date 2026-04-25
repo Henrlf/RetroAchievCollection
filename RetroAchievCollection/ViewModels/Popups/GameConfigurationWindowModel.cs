@@ -19,16 +19,14 @@ public partial class GameConfigurationWindowModel : BaseViewModel
 
     public GameConfigurationWindowModel(MainWindowViewModel mainVm, GameCardViewModel gameCardViewModel) : base(mainVm)
     {
-        var model = GameService.GetGame(gameCardViewModel.Id, gameCardViewModel.ConsoleId);
+        GameModel = gameCardViewModel.GameModel;
 
-        if (model == null)
+        if (GameModel == null)
         {
             throw new NullReferenceException("Game was not found!");
         }
 
         GameCardViewModel = gameCardViewModel;
-
-        GameModel = model;
         PlayCommand = GameModel.PlayCommand;
     }
 
@@ -40,6 +38,7 @@ public partial class GameConfigurationWindowModel : BaseViewModel
             GameModel.PlayCommand = PlayCommand;
             GameService.SaveGameModel(GameModel);
 
+            GameCardViewModel.GameModel = GameModel;
             GameCardViewModel.HasPlayCommand = !string.IsNullOrWhiteSpace(PlayCommand);
 
             _notificationService?.ShowSuccess("Configurations saved.");

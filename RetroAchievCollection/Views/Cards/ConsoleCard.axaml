@@ -62,7 +62,7 @@
                                 Width="350"
                                 BorderBrush="Gray">
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Name}"
+                                <TextBlock Text="{Binding ConsoleModel.Name}"
                                            FontSize="16"
                                            FontWeight="Bold" />
                             </StackPanel>
@@ -72,14 +72,14 @@
                             <TextBlock Text="Company: " FontWeight="Bold"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1">
-                            <TextBlock Text="{Binding Company}" />
+                            <TextBlock Text="{Binding ConsoleModel.Company}" />
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Grid.Column="0">
                             <TextBlock Text="Games: " FontWeight="Bold"/>
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="1">
-                            <TextBlock Text="{Binding Games}" />
+                            <TextBlock Text="{Binding GamesCount}" />
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -114,7 +114,7 @@
                         <Border Grid.Column="1" Classes="option-border">
                             <Button ToolTip.Tip="See Games"
                                     Command="{Binding LoadGameViewCommand}"
-                                    CommandParameter="{Binding Id}">
+                                    CommandParameter="{Binding ConsoleModel.Id}">
                                 <PathIcon Data="{StaticResource star_regular}" Foreground="Orange" />
                             </Button>
                         </Border>

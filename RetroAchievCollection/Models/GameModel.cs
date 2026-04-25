@@ -1,49 +1,58 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using RetroAchievCollection.Enum;
 
 namespace RetroAchievCollection.Models;
 
+[Table("games")]
+[Index(nameof(CodeIntegration), IsUnique = true)]
 public class GameModel
 {
-    [JsonPropertyName("id")]
-    public int Id {get; set;}
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id {get; set;}
 
-    [JsonPropertyName("consoleId")]
-    public int ConsoleId {get; set;}
+    public Guid ConsoleId {get; set;}
 
-    [JsonPropertyName("name")]
+    [ForeignKey(nameof(ConsoleId))]
+    public ConsoleModel ConsoleModel {get; set;} = null!;
+
+    public int CodeIntegration {get; set;}
+
+    [MaxLength(255)]
     public string Name {get; set;} = "";
 
-    [JsonPropertyName("publisher")]
-    public string Publisher {get; set;} = "";
+    [MaxLength(255)]
+    public string? Publisher {get; set;}
 
-    [JsonPropertyName("developer")]
-    public string Developer {get; set;} = "";
+    [MaxLength(255)]
+    public string? Developer {get; set;}
 
-    [JsonPropertyName("genre")]
-    public string Genre {get; set;} = "";
+    [MaxLength(255)]
+    public string? Genre {get; set;}
 
-    [JsonPropertyName("released")]
-    public string Released {get; set;} = "";
+    public DateOnly? ReleaseDate {get; set;}
 
-    [JsonPropertyName("totalAchievements")]
-    public int TotalAchievements {get; set;}
-
-    [JsonPropertyName("totalAchievementsCompleted")]
-    public int TotalAchievementsCompleted {get; set;}
-
-    [JsonPropertyName("totalAchievementsCompletedHardcore")]
-    public int totalAchievementsCompletedHardcore {get; set;}
-
-    [JsonPropertyName("isFavorite")]
     public bool IsFavorite {get; set;}
 
-    [JsonPropertyName("playCommand")]
+    [MaxLength(500)]
     public string PlayCommand {get; set;} = "";
 
-    [JsonPropertyName("imagePath")]
+    [MaxLength(500)]
     public string ImagePath {get; set;} = "";
 
-    [JsonPropertyName("achievements")]
     public List<AchievementModel> Achievements {get; set;} = new();
+
+    [NotMapped]
+    public int AchievementsCount => Achievements.Count;
+
+    [NotMapped]
+    public int AchievementsCompleted => Achievements.Count(a => a.Status == AchievementStatus.Completed);
+
+    [NotMapped]
+    public int AchievementsCompletedHardcore => Achievements.Count(a => a.Status == AchievementStatus.CompletedHardcore);
 }

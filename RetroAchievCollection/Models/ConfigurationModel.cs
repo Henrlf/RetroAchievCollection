@@ -1,12 +1,19 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetroAchievCollection.Models;
 
+[Table("configuration")]
 public class ConfigurationModel
 {
-    [JsonPropertyName("userName")]
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id {get; set;}
+    
+    [MaxLength(255)]
     public string UserName {get; set;} = "";
     
-    [JsonPropertyName("apiKey")]
+    [MaxLength(255)]
     public string ApiKey {get; set;} = "";
 }

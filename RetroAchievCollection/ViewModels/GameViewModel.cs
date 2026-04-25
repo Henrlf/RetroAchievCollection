@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Game;
 using RetroAchievCollection.Models;
 using RetroAchievCollection.Services;
-using RetroAchievCollection.Services.Console;
+using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -18,13 +19,14 @@ public partial class GameViewModel : BaseViewModel
     [ObservableProperty] private ObservableCollection<GameCardViewModel> _games = new();
     [ObservableProperty] private string _searchTextGames = "";
 
-    public int ConsoleId {get; set;}
+    public Guid ConsoleId {get; set;}
+    public int ConsoleCodeIntegration {get; set;}
     public string ConsoleName {get; set;} = "";
 
-    public GameViewModel(MainWindowViewModel mainVm, int consoleId) : base(mainVm)
+    public GameViewModel(MainWindowViewModel mainVm, Guid consoleId) : base(mainVm)
     {
         ConsoleId = consoleId;
-        LoadGames();
+        Dispatcher.UIThread.InvokeAsync(async () => {await LoadGames();});
     }
 
     [RelayCommand]
@@ -40,9 +42,12 @@ public partial class GameViewModel : BaseViewModel
         {
             _mainVm.ShowLoadingScreen("Synchronizing...");
 
-            SynchronizeConsoleGamesCommand command = new(_mainVm.configurationService);
-            command.ConsoleId = ConsoleId;
-            await command.execute();
+            SynchronizeConsoleGamesCommand command = new(_mainVm.configurationService)
+            {
+                ConsoleCodeIntegration = ConsoleCodeIntegration
+            };
+
+            await command.Execute();
 
             await LoadGames();
 
@@ -80,34 +85,25 @@ public partial class GameViewModel : BaseViewModel
         }
     }
 
-    private Task LoadGames(string searchText = "")
+    private async Task LoadGames(string searchText = "")
     {
         Games.Clear();
-        ConsoleService consoleService = new();
+        GameService gameService = new();
 
-        List<GameModel> games = consoleService.GetGames(ConsoleId)
+        var games = await gameService.GetGames(ConsoleId);
+        List<GameModel> gameModels = games
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(a => a.IsFavorite)
             .ThenBy(a => a.Name)
             .ToList();
 
-        foreach (var gameModel in games)
+        foreach (var gameModel in gameModels)
         {
-            Games.Add(new GameCardViewModel(_mainVm, gameModel.Id, gameModel.ConsoleId)
+            Games.Add(new GameCardViewModel(_mainVm, gameModel)
             {
-                Id = gameModel.Id,
-                ConsoleId = gameModel.ConsoleId,
-                Name = gameModel.Name,
                 Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? $" / {gameModel.Publisher}" : "",
-                Developer = gameModel.Developer,
-                Genre = gameModel.Genre,
-                ReleaseDate = DateOnly.TryParse(gameModel.Released, out var d) ? d.ToString("dd/MM/yyyy") : "",
-                PlayCommand = gameModel.PlayCommand,
-                IsFavorite = gameModel.IsFavorite,
-                ImagePath = gameModel.ImagePath
+                ReleaseDate = gameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-"
             });
         }
-
-        return Task.CompletedTask;
     }
 }

@@ -43,7 +43,7 @@
             </Border.Styles>
         
             <Border.Tag>
-                <Binding Path="Status" />
+                <Binding Path="AchievementModel.Status" />
             </Border.Tag>
         
             <Image Source="{Binding Image}"
@@ -57,11 +57,11 @@
             <Grid RowDefinitions="20, 40"
                   HorizontalAlignment="Stretch">
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding AchievementModel.Name}" />
                 </StackPanel>
                 
                 <StackPanel Grid.Row="1">
-                    <TextBlock Text="{Binding Description}" FontSize="12" />
+                    <TextBlock Text="{Binding AchievementModel.Description}" FontSize="12" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -87,7 +87,7 @@
                 </PathIcon.Styles>
 
                 <PathIcon.Tag>
-                    <Binding Path="Status" />
+                    <Binding Path="AchievementModel.Status" />
                 </PathIcon.Tag>
             </PathIcon>
         </Border>

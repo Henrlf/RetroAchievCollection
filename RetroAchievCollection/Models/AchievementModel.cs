@@ -1,24 +1,34 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using RetroAchievCollection.Enum;
 
 namespace RetroAchievCollection.Models;
 
+[Table("achievements")]
+[Index(nameof(CodeIntegration), IsUnique = true)]
 public class AchievementModel
 {
-    [JsonPropertyName("id")]
-    public int Id {get; set;}
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id {get; set;}
+
+    public int CodeIntegration {get; set;}
     
-    [JsonPropertyName("name")]
+    public Guid GameId {get; set;}
+    
+    [ForeignKey(nameof(GameId))]
+    public GameModel GameModel {get; set;} = null!;
+    
+    [MaxLength(255)]
     public string Name {get; set;} = "";
-    
-    [JsonPropertyName("description")]
-    public string Description {get; set;} = "";
-    
-    [JsonPropertyName("imagePath")]
-    public string ImagePath {get; set;} = "";
-    
-    [JsonPropertyName("isCompleted")]
-    public bool IsCompleted {get; set;}
-    
-    [JsonPropertyName("isCompletedHardcore")]
-    public bool IsCompletedHardcore {get; set;}
+
+    [MaxLength(500)]
+    public string? Description {get; set;}
+
+    [MaxLength(500)]
+    public string? ImagePath {get; set;}
+
+    public AchievementStatus Status {get; set;} = AchievementStatus.NotCompleted;
 }

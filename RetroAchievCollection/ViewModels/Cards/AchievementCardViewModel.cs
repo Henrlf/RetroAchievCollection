@@ -1,18 +1,16 @@
 ﻿using System.IO;
 using Avalonia.Media.Imaging;
-using RetroAchievCollection.Enum;
+using RetroAchievCollection.Models;
 
 namespace RetroAchievCollection.ViewModels.Cards;
 
 public partial class AchievementCardViewModel : BaseViewModel
 {
-    public int Id {get; set;}
-    public string Name {get; set;} = "";
-    public string Description {get; set;} = "";
-    public string ImagePath {get; set;} = "";
-    public AchievementStatus Status {get; set;} = AchievementStatus.NotCompleted;
-    
-    public Bitmap? Image => File.Exists(ImagePath) ? new Bitmap(ImagePath) : null;
-    
-    public AchievementCardViewModel(MainWindowViewModel mainVm) : base(mainVm) {}
+    public AchievementModel AchievementModel {get; set;}
+    public Bitmap? Image => File.Exists(AchievementModel.ImagePath) ? new Bitmap(AchievementModel.ImagePath) : null;
+
+    public AchievementCardViewModel(MainWindowViewModel mainVm, AchievementModel achievementModel) : base(mainVm)
+    {
+        AchievementModel = achievementModel;
+    }
 }

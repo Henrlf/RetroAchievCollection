@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Text.Json;
+using System.Linq;
+using RetroAchievCollection.Data;
 using RetroAchievCollection.Models;
 
 namespace RetroAchievCollection.Services.User;
@@ -13,26 +14,18 @@ public class ConfigurationService : BaseService
             throw new ArgumentException("Username and API Key is required!");
         }
 
-        var configModel = new ConfigurationModel
-        {
-            UserName = UserName,
-            ApiKey = ApiKey
-        };
+        using var db = new AppDbContext();
+        ConfigurationModel configurationModel = db.Configuration.First();
+        configurationModel.UserName = UserName;
+        configurationModel.ApiKey = ApiKey;
 
-        SaveJson("config.json", configModel);
+        db.Update(configurationModel);
+        db.SaveChanges();
     }
 
     public ConfigurationModel getConfigurationModel()
     {
-        string json = LoadJson("config.json");
-
-        if (string.IsNullOrWhiteSpace(json))
-        {
-            return new ConfigurationModel();
-        }
-
-        ConfigurationModel? configModel = JsonSerializer.Deserialize<ConfigurationModel>(json);
-
-        return configModel ?? new ConfigurationModel();
+        using var db = new AppDbContext();
+        return db.Configuration.First();
     }
 }

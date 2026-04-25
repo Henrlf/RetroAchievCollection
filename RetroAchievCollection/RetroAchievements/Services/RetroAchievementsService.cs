@@ -30,12 +30,12 @@ public class RetroAchievementsService : BaseService
         return result ?? new List<ConsoleDto>();
     }
 
-    public async Task<List<GameDto>> getConsoleGamesAsync(int consoleId)
+    public async Task<List<GameDto>> getConsoleGamesAsync(int consoleCodeIntegration)
     {
         var parameters = new Dictionary<string, string>
         {
             {"y", ApiKey},
-            {"i", consoleId.ToString()},
+            {"i", consoleCodeIntegration.ToString()},
             {"f", "1"}
         };
 
@@ -48,13 +48,13 @@ public class RetroAchievementsService : BaseService
         return result ?? new List<GameDto>();
     }
 
-    public async Task<GameDto> getGameAndAchievementsAsync(int gameId)
+    public async Task<GameDto> getGameAndAchievementsAsync(int gameCodeIntegration)
     {
         var parameters = new Dictionary<string, string>
         {
             {"y", ApiKey},
             {"u", ApiUsername},
-            {"g", gameId.ToString()}
+            {"g", gameCodeIntegration.ToString()}
         };
 
         var content = new FormUrlEncodedContent(parameters);

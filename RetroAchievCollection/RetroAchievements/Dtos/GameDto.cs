@@ -6,7 +6,7 @@ namespace RetroAchievCollection.RetroAchievements.Dtos;
 public class GameDto
 {
     [JsonPropertyName("ID")]
-    public int Id {get; set;}
+    public int CodeIntegration {get; set;}
 
     [JsonPropertyName("ConsoleID")]
     public int ConsoleId {get; set;}

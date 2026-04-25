@@ -1,18 +1,26 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace RetroAchievCollection.Models;
 
+[Table("consoles")]
+[Index(nameof(CodeIntegration), IsUnique = true)]
 public class ConsoleModel
 {
-    [JsonPropertyName("id")]
-    public int Id {get; set;}
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id {get; set;}
+    
+    public int CodeIntegration {get; set;}
 
-    [JsonPropertyName("name")]
+    [MaxLength(255)]
     public string Name {get; set;} = "";
 
-    [JsonPropertyName("company")]
-    public string Company {get; set;} = "";
+    [MaxLength(255)]
+    public string? Company {get; set;}
 
-    [JsonPropertyName("imagePath")]
+    [MaxLength(500)]
     public string ImagePath {get; set;} = "";
 }

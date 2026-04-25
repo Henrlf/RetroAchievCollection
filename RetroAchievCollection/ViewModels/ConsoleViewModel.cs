@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Console;
 using RetroAchievCollection.Models;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
+using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -20,7 +22,7 @@ public partial class ConsoleViewModel : BaseViewModel
 
     public ConsoleViewModel(MainWindowViewModel mainVm) : base(mainVm)
     {
-        LoadConsoles();
+        Dispatcher.UIThread.InvokeAsync(async () => {await LoadConsoles();});
     }
 
     [RelayCommand]
@@ -64,28 +66,27 @@ public partial class ConsoleViewModel : BaseViewModel
         }
     }
 
-    private Task LoadConsoles(string searchText = "")
+    private async Task LoadConsoles(string searchText = "")
     {
         Consoles.Clear();
         ConsoleService consoleService = new();
+        GameService gameService = new();
 
-        List<ConsoleModel> consoles = consoleService.GetConsoles()
+        var consoles = await consoleService.GetConsoles();
+        List<ConsoleModel> consoleModels = consoles
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderBy(a => a.Name)
             .ToList();
 
-        foreach (var consoleModel in consoles)
+        foreach (var consoleModel in consoleModels)
         {
+            var games = await gameService.GetGames(consoleModel.Id);
+
             Consoles.Add(new ConsoleCardViewModel(_mainVm)
             {
-                Id = consoleModel.Id,
-                Name = consoleModel.Name,
-                Company = consoleModel.Company,
-                Games = consoleService.GetGames(consoleModel.Id).Count,
-                ImagePath = consoleModel.ImagePath
+                ConsoleModel = consoleModel,
+                GamesCount = games.Count,
             });
         }
-        
-        return Task.CompletedTask;
     }
 }

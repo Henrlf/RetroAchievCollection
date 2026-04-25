@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RetroAchievCollection.Models;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.Services.User;
@@ -23,18 +23,19 @@ public partial class MainWindowViewModel : ObservableObject
 
     public INotificationService NotificationService {get;}
     public IRelayCommand LoadConsoleView {get;}
-    public IRelayCommand<int> LoadGameView {get;}
+    public IAsyncRelayCommand<Guid> LoadGameView {get;}
     public ConsoleViewModel? ConsoleViewCache {get; private set;}
 
     public MainWindowViewModel(INotificationService notificationService)
     {
         LoadConsoleView = new RelayCommand(ShowConsolesView);
-        LoadGameView = new RelayCommand<int>(ShowGameView);
+        LoadGameView = new AsyncRelayCommand<Guid>(ShowGameView);
         NotificationService = notificationService;
 
         ShowConsolesView();
     }
 
+    [RelayCommand]
     public void ShowConsolesView()
     {
         if (ConsoleViewCache == null)
@@ -45,14 +46,16 @@ public partial class MainWindowViewModel : ObservableObject
         CurrentView = ConsoleViewCache;
     }
 
-    public void ShowGameView(int consoleId)
+    [RelayCommand]
+    public async Task ShowGameView(Guid consoleId)
     {
         ConsoleService consoleService = new();
-        ConsoleModel? consoleModel = consoleService.GetConsole(consoleId);
+        var consoleModel = await consoleService.GetConsole(consoleId);
 
         CurrentView = new GameViewModel(this, consoleId)
         {
-            ConsoleName = consoleModel != null ? consoleModel.Name : ""
+            ConsoleName = consoleModel != null ? consoleModel.Name : "",
+            ConsoleCodeIntegration = consoleModel?.CodeIntegration ?? 0
         };
     }
 
@@ -66,7 +69,7 @@ public partial class MainWindowViewModel : ObservableObject
     {
         IsLoading = false;
     }
-    
+
     [RelayCommand]
     public async Task ShowConfigurations()
     {

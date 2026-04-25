@@ -10,7 +10,6 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Game;
-using RetroAchievCollection.Enum;
 using RetroAchievCollection.Models;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Game;
@@ -21,33 +20,22 @@ namespace RetroAchievCollection.ViewModels.Cards;
 
 public partial class GameCardViewModel : BaseViewModel
 {
-    public int Id {get; set;}
-    public int ConsoleId {get; set;}
-
-    [ObservableProperty] public string _name = "";
+    [ObservableProperty] public GameModel _gameModel = new();
     [ObservableProperty] public string _publisher = "";
-    [ObservableProperty] public string _developer = "";
-    [ObservableProperty] public string _genre = "";
     [ObservableProperty] public string _releaseDate = "-";
-    [ObservableProperty] public string _playCommand = "-";
-    [ObservableProperty] public bool _isFavorite = false;
 
     [ObservableProperty] public string _trophyIconPath = "/Assets/trophy.svg";
     [ObservableProperty] public bool _hasPlayCommand = false;
-
-    [ObservableProperty] public int _achievementsCount;
-    [ObservableProperty] public int _achievementsCompleted;
     [ObservableProperty] public int _achievProgressPercentage;
     [ObservableProperty] public ObservableCollection<AchievementCardViewModel> _achievements = new();
 
-    public string ImagePath {get; set;} = "";
-    public Bitmap? GameImage => File.Exists(ImagePath) ? new Bitmap(ImagePath) : null;
+    public Bitmap? GameImage => File.Exists(GameModel.ImagePath) ? new Bitmap(GameModel.ImagePath) : null;
 
-    public GameCardViewModel(MainWindowViewModel mainVm, int gameId, int consoleId) : base(mainVm)
+    public GameCardViewModel(MainWindowViewModel mainVm, GameModel gameModel) : base(mainVm)
     {
-        Id = gameId;
-        ConsoleId = consoleId;
+        GameModel = gameModel;
 
+        LoadValues();
         LoadAchievements();
     }
 
@@ -60,7 +48,7 @@ public partial class GameCardViewModel : BaseViewModel
 
             SynchronizeGameCommand command = new(_mainVm.configurationService)
             {
-                GameId = Id
+                GameCodeIntegration = GameModel.CodeIntegration
             };
 
             await command.execute();
@@ -72,16 +60,9 @@ public partial class GameCardViewModel : BaseViewModel
                 return;
             }
 
-            Name = gameModel.Name;
+            GameModel = gameModel;
             Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? $" / {gameModel.Publisher}" : "";
-            Developer = gameModel.Developer;
-            Genre = gameModel.Genre;
-
-            if (!string.IsNullOrWhiteSpace(gameModel.Released))
-            {
-                DateOnly releaseDate = DateOnly.Parse(gameModel.Released);
-                ReleaseDate = releaseDate.ToString("dd/MM/yyyy");
-            }
+            ReleaseDate = gameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-";
 
             LoadAchievements();
 
@@ -139,15 +120,12 @@ public partial class GameCardViewModel : BaseViewModel
     {
         try
         {
-            GameService gameService = new();
-            GameModel? gameModel = gameService.GetGame(Id, ConsoleId);
-
-            if (gameModel == null)
+            if (GameModel == null)
             {
                 throw new NullReferenceException("Game was not found!");
             }
 
-            if (string.IsNullOrWhiteSpace(gameModel.PlayCommand))
+            if (string.IsNullOrWhiteSpace(GameModel.PlayCommand))
             {
                 throw new NullReferenceException("Play command was not defined!");
             }
@@ -155,7 +133,7 @@ public partial class GameCardViewModel : BaseViewModel
             var process = Process.Start(new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/c {gameModel.PlayCommand}",
+                Arguments = $"/c {GameModel.PlayCommand}",
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
@@ -184,18 +162,15 @@ public partial class GameCardViewModel : BaseViewModel
     {
         try
         {
-            IsFavorite = !IsFavorite;
-
-            GameService gameService = new();
-            GameModel? gameModel = gameService.GetGame(Id, ConsoleId);
-
-            if (gameModel == null)
+            if (GameModel == null)
             {
                 throw new NullReferenceException("Game was not found!");
             }
 
-            gameModel.IsFavorite = IsFavorite;
-            gameService.SaveGameModel(gameModel);
+            GameModel.IsFavorite = !GameModel.IsFavorite;
+
+            GameService gameService = new();
+            gameService.SaveGameModel(GameModel);
         }
         catch (Exception ex)
         {
@@ -204,50 +179,29 @@ public partial class GameCardViewModel : BaseViewModel
         }
     }
 
+    private void LoadValues()
+    {
+        HasPlayCommand = !string.IsNullOrWhiteSpace(GameModel.PlayCommand);
+        var achievementsCount = GameModel.AchievementsCount;
+        var achievementsCompleted = GameModel.AchievementsCompleted;
+
+        double result = (double)achievementsCompleted / achievementsCount * 150;
+        AchievProgressPercentage = (int)result;
+
+        if (achievementsCount == achievementsCompleted)
+        {
+            TrophyIconPath = "/Assets/trophy_filled.svg";
+        }
+    }
+
     private void LoadAchievements()
     {
         Achievements.Clear();
-        GameService gameService = new();
-        GameModel? gameModel = gameService.GetGame(Id, ConsoleId);
-
-        if (gameModel == null)
-        {
-            return;
-        }
+        GameModel gameModel = GameModel;
 
         foreach (var achievementModel in gameModel.Achievements)
         {
-            AchievementStatus achievementStatus = AchievementStatus.NotCompleted;
-
-            if (achievementModel.IsCompletedHardcore)
-            {
-                achievementStatus = AchievementStatus.CompletedHardcore;
-            }
-            else if (achievementModel.IsCompleted)
-            {
-                achievementStatus = AchievementStatus.Completed;
-            }
-
-            Achievements.Add(new AchievementCardViewModel(_mainVm)
-            {
-                Id = achievementModel.Id,
-                Name = achievementModel.Name,
-                Description = achievementModel.Description,
-                ImagePath = achievementModel.ImagePath,
-                Status = achievementStatus
-            });
-        }
-
-        HasPlayCommand = !string.IsNullOrWhiteSpace(gameModel.PlayCommand);
-        AchievementsCount = gameModel.TotalAchievements;
-        AchievementsCompleted = gameModel.TotalAchievementsCompleted;
-
-        double result = (double)AchievementsCompleted / AchievementsCount * 150;
-        AchievProgressPercentage = (int)result;
-
-        if (AchievementsCount == AchievementsCompleted)
-        {
-            TrophyIconPath = "/Assets/trophy_filled.svg";
+            Achievements.Add(new AchievementCardViewModel(_mainVm, achievementModel));
         }
     }
 }
