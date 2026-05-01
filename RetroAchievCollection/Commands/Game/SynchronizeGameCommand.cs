@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using RetroAchievCollection.Models;
 using RetroAchievCollection.RetroAchievements.Services;
@@ -30,5 +31,10 @@ public class SynchronizeGameCommand
         var gameDto = await RetroAchievementsService.getGameAndAchievementsAsync(GameCodeIntegration);
 
         GameModel = await GameService.SaveGameDto(gameDto, gameDto.ConsoleId);
+
+        foreach (var achievementDto in gameDto.Achievements.Values.ToList())
+        {
+            await GameService.SaveAchievementDto(achievementDto, GameModel);
+        }
     }
 }

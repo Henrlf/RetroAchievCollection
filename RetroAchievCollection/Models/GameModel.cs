@@ -10,6 +10,7 @@ namespace RetroAchievCollection.Models;
 
 [Table("games")]
 [Index(nameof(CodeIntegration), IsUnique = true)]
+[Index(nameof(ConsoleId))]
 public class GameModel
 {
     [Key]

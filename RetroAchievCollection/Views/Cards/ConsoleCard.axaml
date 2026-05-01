@@ -33,6 +33,8 @@
 
         <Border Classes="main-border">
             <Grid ColumnDefinitions="100, *, Auto">
+
+                <!-- IMAGE -->
                 <Border Grid.Column="0"
                         Background="Transparent"
                         Padding="20">
@@ -43,6 +45,7 @@
                            HorizontalAlignment="Stretch" />
                 </Border>
 
+                <!-- INFO -->
                 <Border Grid.Column="1"
                         BorderBrush="Gray"
                         BorderThickness="2 0">
@@ -62,21 +65,21 @@
                                 Width="350"
                                 BorderBrush="Gray">
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{Binding ConsoleModel.Name}"
+                                <TextBlock Text="{Binding Name}"
                                            FontSize="16"
                                            FontWeight="Bold" />
                             </StackPanel>
                         </Border>
 
                         <StackPanel Grid.Row="1" Grid.Column="0">
-                            <TextBlock Text="Company: " FontWeight="Bold"/>
+                            <TextBlock Text="Company: " FontWeight="Bold" />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1">
-                            <TextBlock Text="{Binding ConsoleModel.Company}" />
+                            <TextBlock Text="{Binding Company}" />
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Grid.Column="0">
-                            <TextBlock Text="Games: " FontWeight="Bold"/>
+                            <TextBlock Text="Games: " FontWeight="Bold" />
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="1">
                             <TextBlock Text="{Binding GamesCount}" />
@@ -84,6 +87,7 @@
                     </Grid>
                 </Border>
 
+                <!-- BUTTONS -->
                 <Border Grid.Column="2">
                     <Grid ColumnDefinitions="*, *, *"
                           VerticalAlignment="Center"
@@ -113,8 +117,7 @@
 
                         <Border Grid.Column="1" Classes="option-border">
                             <Button ToolTip.Tip="See Games"
-                                    Command="{Binding LoadGameViewCommand}"
-                                    CommandParameter="{Binding ConsoleModel.Id}">
+                                    Command="{Binding LoadGamesView}">
                                 <PathIcon Data="{StaticResource star_regular}" Foreground="Orange" />
                             </Button>
                         </Border>

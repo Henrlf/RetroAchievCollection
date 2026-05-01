@@ -8,6 +8,7 @@ namespace RetroAchievCollection.Models;
 
 [Table("achievements")]
 [Index(nameof(CodeIntegration), IsUnique = true)]
+[Index(nameof(GameId))]
 public class AchievementModel
 {
     [Key]
@@ -28,7 +29,7 @@ public class AchievementModel
     public string? Description {get; set;}
 
     [MaxLength(500)]
-    public string? ImagePath {get; set;}
+    public string ImagePath {get; set;} = "";
 
     public AchievementStatus Status {get; set;} = AchievementStatus.NotCompleted;
 }

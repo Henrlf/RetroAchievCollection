@@ -35,9 +35,10 @@ public partial class GameCardViewModel : BaseViewModel
     [ObservableProperty] public int _achievementsCompleted;
     [ObservableProperty] public int _achievProgressPercentage;
     [ObservableProperty] public ObservableCollection<AchievementCardViewModel> _achievements = new();
+    [ObservableProperty] public Bitmap? _gameImage = null;
 
     public GameModel GameModel {get; set;}
-    public Bitmap? GameImage => File.Exists(GameModel.ImagePath) ? new Bitmap(GameModel.ImagePath) : null;
+    public int WidthProgressBar => 250;
 
     public GameCardViewModel(MainWindowViewModel mainVm, GameModel gameModel) : base(mainVm)
     {
@@ -202,7 +203,14 @@ public partial class GameCardViewModel : BaseViewModel
         ReleaseDate = GameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-";
         HasPlayCommand = !string.IsNullOrWhiteSpace(GameModel.PlayCommand);
 
-        double result = (double)AchievementsCompleted / AchievementsCount * 150;
+        var imagePath = Path.Combine(BaseService.MainDirectory, GameModel.ImagePath);
+
+        if (File.Exists(imagePath))
+        {
+            GameImage = new Bitmap(imagePath);
+        }
+
+        double result = (double)AchievementsCompleted / AchievementsCount * WidthProgressBar;
         AchievProgressPercentage = (int)result;
 
         if (AchievementsCount > 0 && AchievementsCount == AchievementsCompleted)

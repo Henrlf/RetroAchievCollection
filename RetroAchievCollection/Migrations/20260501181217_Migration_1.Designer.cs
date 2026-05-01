@@ -11,8 +11,8 @@ using RetroAchievCollection.Data;
 namespace RetroAchievCollection.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260425203735_InsertConfig")]
-    partial class InsertConfig
+    [Migration("20260501181217_Migration_1")]
+    partial class Migration_1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,7 +97,6 @@ namespace RetroAchievCollection.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Company")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -132,12 +131,10 @@ namespace RetroAchievCollection.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Developer")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Genre")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -160,7 +157,6 @@ namespace RetroAchievCollection.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Publisher")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 

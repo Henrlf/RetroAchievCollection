@@ -90,8 +90,7 @@ public partial class GameViewModel : BaseViewModel
         Games.Clear();
         GameService gameService = new();
 
-        var games = await gameService.GetGames(ConsoleId);
-        List<GameModel> gameModels = games
+        var gameModels = (await gameService.GetGames(ConsoleId))
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(a => a.IsFavorite)
             .ThenBy(a => a.Name)

@@ -22,14 +22,10 @@ public partial class MainWindowViewModel : ObservableObject
     public readonly ConfigurationService configurationService = new();
 
     public INotificationService NotificationService {get;}
-    public IRelayCommand LoadConsoleView {get;}
-    public IAsyncRelayCommand<Guid> LoadGameView {get;}
     public ConsoleViewModel? ConsoleViewCache {get; private set;}
 
     public MainWindowViewModel(INotificationService notificationService)
     {
-        LoadConsoleView = new RelayCommand(ShowConsolesView);
-        LoadGameView = new AsyncRelayCommand<Guid>(ShowGameView);
         NotificationService = notificationService;
 
         ShowConsolesView();

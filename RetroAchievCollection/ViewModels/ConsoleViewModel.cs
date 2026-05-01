@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,10 +6,9 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Console;
-using RetroAchievCollection.Models;
+using RetroAchievCollection.Data;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
-using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -36,7 +34,7 @@ public partial class ConsoleViewModel : BaseViewModel
             await command.execute();
 
             await LoadConsoles(SearchTextConsoles);
-            
+
             _notificationService?.ShowSuccess("Consoles synchronized.");
         }
         catch (Exception ex)
@@ -70,23 +68,23 @@ public partial class ConsoleViewModel : BaseViewModel
     private async Task LoadConsoles(string searchText = "")
     {
         Consoles.Clear();
-        ConsoleService consoleService = new();
-        GameService gameService = new();
 
-        var consoles = await consoleService.GetConsoles();
-        List<ConsoleModel> consoleModels = consoles
+        ConsoleService consoleService = new();
+
+        var consoleModels = (await consoleService.GetConsoles())
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderBy(a => a.Name)
             .ToList();
 
+        using var db = new AppDbContext();
+
         foreach (var consoleModel in consoleModels)
         {
-            var games = await gameService.GetGames(consoleModel.Id);
+            var gamesCount = db.Games.Count(c => c.ConsoleId == consoleModel.Id);
 
-            Consoles.Add(new ConsoleCardViewModel(_mainVm)
+            Consoles.Add(new ConsoleCardViewModel(_mainVm, consoleModel)
             {
-                ConsoleModel = consoleModel,
-                GamesCount = games.Count,
+                GamesCount = gamesCount
             });
         }
     }

@@ -11,8 +11,8 @@ using RetroAchievCollection.Data;
 namespace RetroAchievCollection.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260425212309_Migration_1")]
-    partial class Migration_1
+    [Migration("20260501212647_Migration_2")]
+    partial class Migration_2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,7 @@ namespace RetroAchievCollection.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImagePath")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
@@ -152,6 +153,7 @@ namespace RetroAchievCollection.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PlayCommand")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 

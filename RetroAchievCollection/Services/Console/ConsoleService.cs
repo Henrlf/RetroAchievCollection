@@ -46,9 +46,9 @@ public class ConsoleService : BaseService
             try
             {
                 var extension = Path.GetExtension(new Uri(consoleDto.ImageUrl).AbsolutePath);
-                var imagePath = Path.Combine(MainDirectory, "images", "console", consoleModel.CodeIntegration + extension);
+                var imagePath = Path.Combine("images", "console", consoleModel.CodeIntegration + extension);
 
-                await SaveImageAsync(consoleDto.ImageUrl, imagePath);
+                await SaveImageAsync(consoleDto.ImageUrl, Path.Combine(MainDirectory, imagePath));
                 consoleModel.ImagePath = imagePath;
             }
             catch (Exception e)
@@ -68,91 +68,4 @@ public class ConsoleService : BaseService
 
         await db.SaveChangesAsync();
     }
-
-    // ----------------------------------------------------------------------------------------------------------------
-    // TODO: REMOVE
-
-    // public List<ConsoleModel> GetConsoles()
-    // {
-    //     string json = LoadJson("consoles.json");
-    //
-    //     if (string.IsNullOrWhiteSpace(json))
-    //     {
-    //         return new List<ConsoleModel>();
-    //     }
-    //
-    //     return JsonSerializer.Deserialize<List<ConsoleModel>>(json) ?? new List<ConsoleModel>();
-    // }
-
-    // public ConsoleModel? GetConsole(int id)
-    // {
-    //     return GetConsoles().FirstOrDefault(console => console.Id == id);
-    // }
-
-    // public List<GameModel> GetGames(int consoleId)
-    // {
-    //     var directoryPath = Path.Combine(MainDirectory, "games", $"console_{consoleId}");
-    //
-    //     if (!Directory.Exists(directoryPath))
-    //     {
-    //         return new List<GameModel>();
-    //     }
-    //
-    //     var gameCollection = new ConcurrentBag<GameModel>();
-    //     var arquivos = Directory.GetFiles(directoryPath, "*.json");
-    //
-    //     Parallel.ForEach(arquivos, new ParallelOptions {MaxDegreeOfParallelism = 8},
-    //         arquivo =>
-    //         {
-    //             try
-    //             {
-    //                 string json = File.ReadAllText(arquivo);
-    //                 GameModel? game = JsonSerializer.Deserialize<GameModel>(json);
-    //
-    //                 if (game != null)
-    //                 {
-    //                     gameCollection.Add(game);
-    //                 }
-    //             }
-    //             catch (Exception e)
-    //             {
-    //                 SaveError(e.ToString());
-    //             }
-    //         });
-    //
-    //     return gameCollection.ToList();
-    // }
-
-    // public async Task SaveConsoles(List<ConsoleDto> consolesDto)
-    // {
-    //     Dictionary<int, ConsoleModel> consoleList = GetConsoles().ToDictionary(c => c.Id);
-    //
-    //     foreach (var consoleDto in consolesDto)
-    //     {
-    //         ConsoleModel console = consoleList.GetValueOrDefault(consoleDto.CodeIntegration) ?? new ConsoleModel();
-    //         console.Id = consoleDto.CodeIntegration;
-    //         console.Name = consoleDto.Name;
-    //
-    //         if ((string.IsNullOrWhiteSpace(console.ImagePath) || !File.Exists(console.ImagePath))
-    //             && !string.IsNullOrWhiteSpace(consoleDto.ImageUrl))
-    //         {
-    //             try
-    //             {
-    //                 var extension = Path.GetExtension(new Uri(consoleDto.ImageUrl).AbsolutePath);
-    //                 var imagePath = Path.Combine(MainDirectory, "images", "console", console.Id + extension);
-    //
-    //                 await SaveImageAsync(consoleDto.ImageUrl, imagePath);
-    //                 console.ImagePath = imagePath;
-    //             }
-    //             catch (Exception e)
-    //             {
-    //                 SaveError(e.ToString());
-    //             }
-    //         }
-    //
-    //         consoleList[consoleDto.CodeIntegration] = console;
-    //     }
-    //
-    //     await SaveJsonAsync("consoles.json", consoleList.Values.OrderBy(c => c.Name));
-    // }
 }

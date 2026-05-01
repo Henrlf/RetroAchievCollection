@@ -19,12 +19,12 @@
             <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="#4a4a4a" />
             <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver" Color="#4a4a4a" />
             <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed" Color="#4a4a4a" />
-            <Thickness x:Key="ExpanderHeaderPadding">0</Thickness>
+            <Thickness x:Key="ExpanderHeaderPadding">0 5</Thickness>
         </Expander.Resources>
 
         <!-- CARD -->
         <Expander.Header>
-            <Grid ColumnDefinitions="100, *, 200"
+            <Grid ColumnDefinitions="100, *, Auto"
                   RowDefinitions="*, *">
                 <Grid.Styles>
                     <Style Selector="Border.main-borders">
@@ -33,17 +33,6 @@
                         <Setter Property="Padding" Value="6" />
                         <Setter Property="BorderBrush" Value="Gray" />
                         <Setter Property="BorderThickness" Value="0" />
-                    </Style>
-
-                    <Style Selector="Border.border-button">
-                        <Setter Property="HorizontalAlignment" Value="Right" />
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="Width" Value="42" />
-                        <Setter Property="Height" Value="42" />
-                        <Setter Property="Margin" Value="3 0" />
-                        <Setter Property="BorderBrush" Value="gray" />
-                        <Setter Property="CornerRadius" Value="4" />
-                        <Setter Property="BorderThickness" Value="1" />
                     </Style>
 
                     <Style Selector="Border.bar-progeress">
@@ -56,23 +45,11 @@
                         <Setter Property="BorderThickness" Value="0" />
                         <Setter Property="CornerRadius" Value="1" />
                     </Style>
-
-                    <Style Selector="Button.btn-option">
-                        <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="VerticalAlignment" Value="Stretch" />
-                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                        <Setter Property="Padding" Value="0" />
-                    </Style>
-
-                    <Style Selector="Button">
-                        <Setter Property="Cursor" Value="Hand" />
-                    </Style>
                 </Grid.Styles>
 
                 <!-- IMAGE | PLAY BUTTON -->
                 <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
                         Classes="main-borders"
-                        BorderThickness="0 , 0, 2 ,0"
                         Background="Transparent">
                     <Grid>
                         <Grid.Styles>
@@ -128,9 +105,10 @@
                 <!-- INFOS -->
                 <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                         Classes="main-borders"
-                        HorizontalAlignment="Left">
+                        HorizontalAlignment="Left"
+                        BorderThickness="2 , 0, 0 ,0">
                     <Grid ColumnDefinitions="105, *"
-                          RowDefinitions="30, 20, 20, 20"
+                          RowDefinitions="*, 20, 20, 20"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Stretch">
 
@@ -178,14 +156,15 @@
                 </Border>
 
                 <!-- BUTTONS -->
-                <Border Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
+                <Border Grid.Row="0" Grid.Column="2"
+                        HorizontalAlignment="Right">
                     <Grid ColumnDefinitions="*, *, *"
                           VerticalAlignment="Bottom"
                           HorizontalAlignment="Stretch">
 
                         <!-- FAVORITE -->
                         <Border Grid.Row="0" Grid.Column="0" Classes="border-button">
-                            <Button ToolTip.Tip="Favorite" Classes="btn-option"
+                            <Button ToolTip.Tip="Favorite" Classes="base-button"
                                     Command="{Binding FavoriteGame}">
                                 <PathIcon>
                                     <PathIcon.Styles>
@@ -208,7 +187,7 @@
 
                         <!-- SYNCHRONIZE -->
                         <Border Grid.Row="0" Grid.Column="1" Classes="border-button">
-                            <Button ToolTip.Tip="Synchronize game" Classes="btn-option"
+                            <Button ToolTip.Tip="Synchronize game" Classes="base-button"
                                     Command="{Binding SynchronizeAchievements}">
                                 <PathIcon Data="{StaticResource arrow_sync_regular}" Foreground="White" />
                             </Button>
@@ -218,7 +197,7 @@
                         <Border Grid.Row="0" Grid.Column="2" Classes="border-button">
                             <Button ToolTip.Tip="Configure Play Command"
                                     Command="{Binding ShowGameConfigurations}"
-                                    Classes="btn-option">
+                                    Classes="base-button">
                                 <PathIcon>
                                     <PathIcon.Styles>
                                         <Style Selector="PathIcon">
@@ -246,7 +225,9 @@
                       VerticalAlignment="Bottom"
                       ColumnDefinitions="*, 40">
 
-                    <Grid Grid.Column="0" HorizontalAlignment="Stretch"
+                    <!-- PROGRESS BAR -->
+                    <Grid Grid.Column="0"
+                          HorizontalAlignment="Stretch"
                           VerticalAlignment="Center"
                           RowDefinitions="*, *">
                         <Border Grid.Row="0" HorizontalAlignment="Right">
@@ -260,7 +241,9 @@
                             </TextBlock>
                         </Border>
 
-                        <Border Grid.Row="1" Classes="bar-progeress">
+                        <Border Grid.Row="1"
+                                Classes="bar-progeress"
+                                Width="{Binding WidthProgressBar}">
                             <Border Classes="bar-progeress"
                                     HorizontalAlignment="Left"
                                     Background="Orange"
@@ -268,6 +251,7 @@
                         </Border>
                     </Grid>
 
+                    <!-- TROPHY -->
                     <Border Grid.Column="1" Padding="5 0 0 6">
                         <Viewbox Width="32">
                             <svg:Svg Path="{Binding TrophyIconPath}" />
