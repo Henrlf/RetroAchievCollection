@@ -42,26 +42,7 @@ public class SynchronizeConsoleGamesCommand
                 var infoGameDto = await RetroAchievementsService.getGameAndAchievementsAsync(simpleGameDto.CodeIntegration);
                 GameModel gameModel = await GameService.SaveGameDto(infoGameDto, ConsoleCodeIntegration);
 
-                await SaveAchievements(infoGameDto.Achievements.Values.ToList(), gameModel);
-            }
-            finally
-            {
-                semaphore.Release();
-            }
-        }));
-    }
-
-    protected async Task SaveAchievements(List<AchievementDto> achievementsDto, GameModel gameModel)
-    {
-        var semaphore = new SemaphoreSlim(25);
-
-        await Task.WhenAll(achievementsDto.Select(async achievementDto =>
-        {
-            await semaphore.WaitAsync();
-
-            try
-            {
-                await GameService.SaveAchievementDto(achievementDto, gameModel);
+                await GameService.SaveAchievementsDto(infoGameDto.Achievements.Values.ToList(), gameModel);
             }
             finally
             {

@@ -1,31 +1,24 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RetroAchievCollection.Data;
 using RetroAchievCollection.Enum;
 using RetroAchievCollection.Models;
+using RetroAchievCollection.Repositories;
 using RetroAchievCollection.RetroAchievements.Dtos;
 
 namespace RetroAchievCollection.Services.Game;
 
 public class GameService : BaseService
 {
-    public async Task<List<GameModel>> GetGames(Guid consoleId)
-    {
-        using var db = new AppDbContext();
-
-        return await db.Games
-            .Include(g => g.Achievements)
-            .Where(c => c.ConsoleId == consoleId)
-            .ToListAsync();
-    }
-
-    public void SaveGameModel(GameModel gameModel)
+    public async Task SaveGameModel(GameModel gameModel)
     {
         if (gameModel.CodeIntegration == 0)
         {
@@ -37,13 +30,14 @@ public class GameService : BaseService
             throw new NoNullAllowedException("Console ID is invalid!");
         }
 
-        using var db = new AppDbContext();
-        db.Games.Update(gameModel);
-        db.SaveChanges();
+        GameRepository gameRepository = new();
+        await gameRepository.UpdateGame(gameModel);
     }
 
     public async Task<GameModel> SaveGameDto(GameDto gameDto, int consoleCodeintegration)
     {
+        GameRepository gameRepository = new();
+
         using var db = new AppDbContext();
         ConsoleModel? consoleModel = await db.Consoles.SingleOrDefaultAsync(c => c.CodeIntegration == consoleCodeintegration);
 
@@ -52,7 +46,7 @@ public class GameService : BaseService
             throw new NullReferenceException("Console does not exist!");
         }
 
-        GameModel? gameModel = await db.Games.SingleOrDefaultAsync(g => g.CodeIntegration == gameDto.CodeIntegration);
+        GameModel? gameModel = await gameRepository.GetByCodeIntegration(gameDto.CodeIntegration, true);
 
         if (gameModel == null)
         {
@@ -87,78 +81,99 @@ public class GameService : BaseService
 
         if (gameModel.Id == Guid.Empty)
         {
-            db.Games.Add(gameModel);
+            await gameRepository.InsertGame(gameModel);
         }
         else
         {
-            db.Games.Update(gameModel);
+            await gameRepository.UpdateGame(gameModel);
         }
-
-        await db.SaveChangesAsync();
 
         return gameModel;
     }
 
-    public async Task<AchievementModel> SaveAchievementDto(AchievementDto achievementDto, GameModel gameModel)
+    public async Task SaveAchievementsDto(List<AchievementDto> achievementsDto, GameModel gameModel)
     {
-        using var db = new AppDbContext();
+        AchievementRepository achievementRepository = new();
+        List<AchievementModel> achievementsDb = await achievementRepository.GetAchievements(gameModel.Id);
 
-        AchievementModel? achievementModel = await db.Achievements.SingleOrDefaultAsync(a => a.CodeIntegration == achievementDto.CodeIntegration);
+        var achievementsInsertBatch = new ConcurrentBag<AchievementModel>();
+        var achievementsUpdateBatch = new ConcurrentBag<AchievementModel>();
+        var semaphore = new SemaphoreSlim(25);
 
-        if (achievementModel == null)
+        await Task.WhenAll(achievementsDto.Select(async achievementDto =>
         {
-            achievementModel = new AchievementModel();
-        }
+            await semaphore.WaitAsync();
 
-        achievementModel.GameId = gameModel.Id;
-        achievementModel.CodeIntegration = achievementDto.CodeIntegration;
-        achievementModel.Name = achievementDto.Name;
-        achievementModel.Description = achievementDto.Description;
-
-        if (!string.IsNullOrWhiteSpace(achievementDto.DateEarnedHardcore))
-        {
-            achievementModel.Status = AchievementStatus.CompletedHardcore;
-        }
-        else if (!string.IsNullOrWhiteSpace(achievementDto.DateEarned))
-        {
-            achievementModel.Status = AchievementStatus.Completed;
-        }
-
-        try
-        {
-            string isLock = "";
-
-            if (achievementModel.Status == AchievementStatus.NotCompleted)
+            try
             {
-                isLock = "_lock";
+                AchievementModel? achievementModel = achievementsDb.FirstOrDefault(a => a.CodeIntegration == achievementDto.CodeIntegration);
+
+                if (achievementModel == null)
+                {
+                    achievementModel = new AchievementModel();
+                }
+
+                achievementModel.GameId = gameModel.Id;
+                achievementModel.CodeIntegration = achievementDto.CodeIntegration;
+                achievementModel.Name = achievementDto.Name;
+                achievementModel.Description = achievementDto.Description;
+
+                if (!string.IsNullOrWhiteSpace(achievementDto.DateEarnedHardcore))
+                {
+                    achievementModel.Status = AchievementStatus.CompletedHardcore;
+                }
+                else if (!string.IsNullOrWhiteSpace(achievementDto.DateEarned))
+                {
+                    achievementModel.Status = AchievementStatus.Completed;
+                }
+
+                try
+                {
+                    string isLock = "";
+
+                    if (achievementModel.Status == AchievementStatus.NotCompleted)
+                    {
+                        isLock = "_lock";
+                    }
+
+                    var imageUrl = $"https://media.retroachievements.org/Badge/{achievementDto.BadgeName}{isLock}.png";
+
+                    if (string.IsNullOrWhiteSpace(achievementModel.ImagePath) || !File.Exists(achievementModel.ImagePath))
+                    {
+                        var imagePath = Path.Combine("images", "achievements", $"game_{gameModel.CodeIntegration}", $"{achievementDto.CodeIntegration}{isLock}.png");
+
+                        await SaveImageAsync(imageUrl, Path.Combine(MainDirectory, imagePath));
+                        achievementModel.ImagePath = imagePath;
+                    }
+                }
+                catch (Exception e)
+                {
+                    SaveError(e.ToString());
+                }
+
+                if (achievementModel.Id == Guid.Empty)
+                {
+                    achievementsInsertBatch.Add(achievementModel);
+                }
+                else
+                {
+                    achievementsUpdateBatch.Add(achievementModel);
+                }
             }
-
-            var imageUrl = $"https://media.retroachievements.org/Badge/{achievementDto.BadgeName}{isLock}.png";
-
-            if (string.IsNullOrWhiteSpace(achievementModel.ImagePath) || !File.Exists(achievementModel.ImagePath))
+            finally
             {
-                var imagePath = Path.Combine("images", "achievements", $"game_{gameModel.CodeIntegration}", $"{achievementDto.CodeIntegration}{isLock}.png");
-
-                await SaveImageAsync(imageUrl, Path.Combine(MainDirectory, imagePath));
-                achievementModel.ImagePath = imagePath;
+                semaphore.Release();
             }
-        }
-        catch (Exception e)
+        }));
+
+        if (!achievementsInsertBatch.IsEmpty)
         {
-            SaveError(e.ToString());
+            await achievementRepository.InsertByRange(achievementsInsertBatch.ToList());
         }
 
-        if (achievementModel.Id == Guid.Empty)
+        if (!achievementsUpdateBatch.IsEmpty)
         {
-            db.Achievements.Add(achievementModel);
+            await achievementRepository.UpdateByRange(achievementsUpdateBatch.ToList());
         }
-        else
-        {
-            db.Achievements.Update(achievementModel);
-        }
-
-        await db.SaveChangesAsync();
-
-        return achievementModel;
     }
 }

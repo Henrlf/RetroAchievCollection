@@ -6,7 +6,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Console;
-using RetroAchievCollection.Data;
+using RetroAchievCollection.Repositories;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.ViewModels.Cards;
@@ -70,21 +70,18 @@ public partial class ConsoleViewModel : BaseViewModel
         Consoles.Clear();
 
         ConsoleService consoleService = new();
+        GameRepository gameRepository = new();
 
         var consoleModels = (await consoleService.GetConsoles())
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderBy(a => a.Name)
             .ToList();
 
-        using var db = new AppDbContext();
-
         foreach (var consoleModel in consoleModels)
         {
-            var gamesCount = db.Games.Count(c => c.ConsoleId == consoleModel.Id);
-
             Consoles.Add(new ConsoleCardViewModel(_mainVm, consoleModel)
             {
-                GamesCount = gamesCount
+                GamesCount = await gameRepository.GetConsoleGamesCount(consoleModel.Id)
             });
         }
     }

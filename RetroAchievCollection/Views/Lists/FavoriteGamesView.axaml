@@ -1,0 +1,72 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Lists"
+             xmlns:cards="clr-namespace:RetroAchievCollection.Views.Cards"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="RetroAchievCollection.Views.Lists.FavoriteGamesView"
+             x:DataType="vm:FavoriteGamesViewModel"
+             x:CompileBindings="True">
+
+    <Grid RowDefinitions="1, Auto, *">
+        <Separator Grid.Row="0" Margin="10 0" />
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="Auto"
+              HorizontalAlignment="Right"
+              Margin="10 6">
+
+            <Grid HorizontalAlignment="Right"
+                  ColumnDefinitions="*, Auto, Auto">
+                <Grid.Styles>
+                    <Style Selector="StackPanel">
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+
+                    <Style Selector="TextBox">
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Height" Value="40" />
+                        <Setter Property="AcceptsReturn" Value="False" />
+                        <Setter Property="TextWrapping" Value="NoWrap" />
+                        <Setter Property="SelectionBrush" Value="LightGray" />
+                        <Setter Property="SelectionForegroundBrush" Value="Black" />
+                    </Style>
+                </Grid.Styles>
+
+                <!-- SEARCH BAR -->
+                <StackPanel Grid.Column="0"
+                            Width="400">
+                    <TextBox Watermark="Search..." Text="{Binding SearchTextGames}">
+                        <TextBox.KeyBindings>
+                            <KeyBinding Gesture="Enter" Command="{Binding SearchGames}" />
+                        </TextBox.KeyBindings>
+                    </TextBox>
+                </StackPanel>
+
+                <!-- SEARCH BUTTON -->
+                <Border Grid.Column="1" Classes="border-button">
+                    <Button ToolTip.Tip="Search"
+                            Classes="base-button"
+                            Command="{Binding SearchGames}">
+                        <PathIcon Data="{StaticResource search}" Foreground="White" />
+                    </Button>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- GAME CARDS -->
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Games}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <cards:GameCard DataContext="{Binding}" Margin="0 5" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

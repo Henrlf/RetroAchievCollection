@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,9 +6,8 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Game;
-using RetroAchievCollection.Models;
+using RetroAchievCollection.Repositories;
 using RetroAchievCollection.Services;
-using RetroAchievCollection.Services.Game;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -85,12 +83,12 @@ public partial class GameViewModel : BaseViewModel
         }
     }
 
-    private async Task LoadGames(string searchText = "")
+    protected virtual async Task LoadGames(string searchText = "")
     {
         Games.Clear();
-        GameService gameService = new();
+        GameRepository gameRepository = new();
 
-        var gameModels = (await gameService.GetGames(ConsoleId))
+        var gameModels = (await gameRepository.GetConsoleGames(ConsoleId, true))
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(a => a.IsFavorite)
             .ThenBy(a => a.Name)

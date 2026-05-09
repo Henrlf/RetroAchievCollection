@@ -32,9 +32,6 @@ public class SynchronizeGameCommand
 
         GameModel = await GameService.SaveGameDto(gameDto, gameDto.ConsoleId);
 
-        foreach (var achievementDto in gameDto.Achievements.Values.ToList())
-        {
-            await GameService.SaveAchievementDto(achievementDto, GameModel);
-        }
+        await GameService.SaveAchievementsDto(gameDto.Achievements.Values.ToList(), GameModel);
     }
 }

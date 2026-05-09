@@ -45,7 +45,7 @@
                 </Menu>
             </Grid>
 
-            <TabControl>
+            <TabControl SelectionChanged="TabControl_SelectionChanged">
                 <TabItem Header="Consoles" Margin="10 0 0 0">
                     <Grid RowDefinitions="1, *" >
                         <ContentControl Grid.Row="1" Content="{Binding CurrentView}"
@@ -54,7 +54,14 @@
                     </Grid>
                 </TabItem>
 
-                <!-- <TabItem Header="Favorite" /> -->
+                <TabItem Header="Favorites" >
+                    <Grid RowDefinitions="1, *" >
+                        <ContentControl Grid.Row="1" Content="{Binding FavoriteGamesView}"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"/>
+                    </Grid>
+                </TabItem>
+                
                 <!-- <TabItem Header="Games" /> -->
             </TabControl>
         </DockPanel>

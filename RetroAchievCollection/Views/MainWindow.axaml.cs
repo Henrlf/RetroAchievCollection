@@ -24,4 +24,15 @@ public partial class MainWindow : Window
         using var db = new AppDbContext();
         db.Database.Migrate();
     }
+
+    private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // IF TAB FAVORITES
+        if (sender is TabControl tabControl
+            && tabControl.SelectedIndex == 1
+            && DataContext is MainWindowViewModel vm)
+        {
+            vm.ShowFavoriteGamesView();
+        }
+    }
 }

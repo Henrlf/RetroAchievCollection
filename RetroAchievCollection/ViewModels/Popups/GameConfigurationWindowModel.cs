@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Models;
@@ -31,12 +32,12 @@ public partial class GameConfigurationWindowModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void SaveConfigurations()
+    public async Task SaveConfigurations()
     {
         try
         {
             GameModel.PlayCommand = PlayCommand;
-            GameService.SaveGameModel(GameModel);
+            await GameService.SaveGameModel(GameModel);
 
             GameCardViewModel.GameModel = GameModel;
             GameCardViewModel.HasPlayCommand = !string.IsNullOrWhiteSpace(PlayCommand);

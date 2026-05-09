@@ -44,8 +44,8 @@ public partial class GameCardViewModel : BaseViewModel
     {
         GameModel = gameModel;
 
-        LoadValues();
-        LoadAchievements();
+        LoadValues(gameModel);
+        LoadAchievements(gameModel);
     }
 
     [RelayCommand]
@@ -71,8 +71,8 @@ public partial class GameCardViewModel : BaseViewModel
 
             GameModel = gameModel;
 
-            LoadValues();
-            LoadAchievements();
+            LoadValues(gameModel);
+            LoadAchievements(gameModel);
 
             _notificationService?.ShowSuccess("Game achievements synchronized.");
         }
@@ -166,7 +166,7 @@ public partial class GameCardViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void FavoriteGame()
+    public async Task FavoriteGame()
     {
         try
         {
@@ -175,12 +175,11 @@ public partial class GameCardViewModel : BaseViewModel
                 throw new NullReferenceException("Game was not found!");
             }
 
-
             IsFavorite = !IsFavorite;
             GameModel.IsFavorite = IsFavorite;
 
             GameService gameService = new();
-            gameService.SaveGameModel(GameModel);
+            await gameService.SaveGameModel(GameModel);
         }
         catch (Exception ex)
         {
@@ -189,21 +188,21 @@ public partial class GameCardViewModel : BaseViewModel
         }
     }
 
-    private void LoadValues()
+    private void LoadValues(GameModel gameModel)
     {
-        Name = GameModel.Name;
-        Developer = GameModel.Developer ?? "";
-        Genre = GameModel.Genre ?? "";
-        PlayCommand = GameModel.PlayCommand;
-        AchievementsCount = GameModel.AchievementsCount;
-        AchievementsCompleted = GameModel.AchievementsCompleted;
-        IsFavorite = GameModel.IsFavorite;
+        Name = gameModel.Name;
+        Developer = gameModel.Developer ?? "";
+        Genre = gameModel.Genre ?? "";
+        PlayCommand = gameModel.PlayCommand;
+        AchievementsCount = gameModel.AchievementsCount;
+        AchievementsCompleted = gameModel.AchievementsCompleted;
+        IsFavorite = gameModel.IsFavorite;
 
-        Publisher = !string.IsNullOrWhiteSpace(GameModel.Publisher) ? $" / {GameModel.Publisher}" : "";
-        ReleaseDate = GameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-";
-        HasPlayCommand = !string.IsNullOrWhiteSpace(GameModel.PlayCommand);
+        Publisher = !string.IsNullOrWhiteSpace(gameModel.Publisher) ? $" / {gameModel.Publisher}" : "";
+        ReleaseDate = gameModel.ReleaseDate?.ToString("dd/MM/yyyy") ?? "-";
+        HasPlayCommand = !string.IsNullOrWhiteSpace(gameModel.PlayCommand);
 
-        var imagePath = Path.Combine(BaseService.MainDirectory, GameModel.ImagePath);
+        var imagePath = Path.Combine(BaseService.MainDirectory, gameModel.ImagePath);
 
         if (File.Exists(imagePath))
         {
@@ -219,10 +218,9 @@ public partial class GameCardViewModel : BaseViewModel
         }
     }
 
-    private void LoadAchievements()
+    private void LoadAchievements(GameModel gameModel)
     {
         Achievements.Clear();
-        GameModel gameModel = GameModel;
 
         foreach (var achievementModel in gameModel.Achievements)
         {

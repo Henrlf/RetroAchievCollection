@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.Services.User;
+using RetroAchievCollection.ViewModels.Lists;
 using RetroAchievCollection.ViewModels.Popups;
 using RetroAchievCollection.Views.Popups;
 
@@ -16,6 +17,9 @@ namespace RetroAchievCollection.ViewModels;
 public partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty] private object? _currentView;
+    [ObservableProperty] private object? _favoriteGamesView;
+
+    // [ObservableProperty] private object? _allGamesView;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string _textLoading = "Loading...";
 
@@ -34,11 +38,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     public void ShowConsolesView()
     {
-        if (ConsoleViewCache == null)
-        {
-            ConsoleViewCache = new ConsoleViewModel(this);
-        }
-
+        ConsoleViewCache ??= new ConsoleViewModel(this);
         CurrentView = ConsoleViewCache;
     }
 
@@ -53,6 +53,12 @@ public partial class MainWindowViewModel : ObservableObject
             ConsoleName = consoleModel != null ? consoleModel.Name : "",
             ConsoleCodeIntegration = consoleModel?.CodeIntegration ?? 0
         };
+    }
+
+    [RelayCommand]
+    public void ShowFavoriteGamesView()
+    {
+        FavoriteGamesView = new FavoriteGamesViewModel(this);
     }
 
     public void ShowLoadingScreen(string text)
