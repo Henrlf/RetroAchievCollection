@@ -30,28 +30,28 @@
         </Grid.Styles>
 
         <!-- IMAGE -->
-        <Border Grid.Row="0" Grid.Column="0" 
+        <Border Grid.Row="0" Grid.Column="0"
                 Classes="achievement-acquired">
             <Border.Styles>
                 <Style Selector="Border[Tag=1]">
-                    <Setter Property="BoxShadow" Value="0 0 20 2 Gold" />
+                    <Setter Property="BoxShadow" Value="0 0 9 4 Gold" />
                 </Style>
-        
+
                 <Style Selector="Border[Tag=2]">
-                    <Setter Property="BoxShadow" Value="0 0 20 2 Red" />
+                    <Setter Property="BoxShadow" Value="0 0 9 4 Red" />
                 </Style>
             </Border.Styles>
-        
+
             <Border.Tag>
                 <Binding Path="AchievementModel.Status" />
             </Border.Tag>
-        
+
             <Image Source="{Binding Image}"
                    Stretch="UniformToFill"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Stretch" />
         </Border>
-        
+
         <!-- INFO -->
         <Border Grid.Row="0" Grid.Column="1" BorderThickness="2 0">
             <Grid RowDefinitions="20, 40"
@@ -59,7 +59,7 @@
                 <StackPanel Grid.Row="0">
                     <TextBlock Text="{Binding AchievementModel.Name}" />
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="1">
                     <TextBlock Text="{Binding AchievementModel.Description}" FontSize="12" />
                 </StackPanel>
@@ -79,7 +79,7 @@
                         <Setter Property="Data" Value="{StaticResource star_regular_filled}" />
                         <Setter Property="Foreground" Value="Gold" />
                     </Style>
-                    
+
                     <Style Selector="PathIcon[Tag=2]">
                         <Setter Property="Data" Value="{StaticResource star_regular_filled}" />
                         <Setter Property="Foreground" Value="Red" />

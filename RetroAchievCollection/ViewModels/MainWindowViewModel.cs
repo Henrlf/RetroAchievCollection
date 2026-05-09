@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Repositories;
 using RetroAchievCollection.Services;
-using RetroAchievCollection.Services.User;
 using RetroAchievCollection.ViewModels.Lists;
 using RetroAchievCollection.ViewModels.Popups;
 using RetroAchievCollection.Views.Popups;
@@ -22,8 +21,6 @@ public partial class MainWindowViewModel : ObservableObject
     
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string _textLoading = "Loading...";
-
-    public readonly ConfigurationService configurationService = new();
 
     public INotificationService NotificationService {get;}
     public ConsoleViewModel? ConsoleViewCache {get; private set;}
@@ -61,17 +58,6 @@ public partial class MainWindowViewModel : ObservableObject
         FavoriteGamesTab = new FavoriteGamesViewModel(this);
     }
 
-    public void ShowLoadingScreen(string text)
-    {
-        TextLoading = text;
-        IsLoading = true;
-    }
-
-    public void HideLoadingScreen()
-    {
-        IsLoading = false;
-    }
-
     [RelayCommand]
     public async Task ShowConfigurations()
     {
@@ -99,5 +85,16 @@ public partial class MainWindowViewModel : ObservableObject
         {
             dialog.Show();
         }
+    }
+    
+    public void ShowLoadingScreen(string text)
+    {
+        TextLoading = text;
+        IsLoading = true;
+    }
+
+    public void HideLoadingScreen()
+    {
+        IsLoading = false;
     }
 }

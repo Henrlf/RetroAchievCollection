@@ -52,8 +52,5 @@ public class GameModel
     public int AchievementsCount => Achievements.Count;
 
     [NotMapped]
-    public int AchievementsCompleted => Achievements.Count(a => a.Status == AchievementStatus.Completed);
-
-    [NotMapped]
-    public int AchievementsCompletedHardcore => Achievements.Count(a => a.Status == AchievementStatus.CompletedHardcore);
+    public int AchievementsCompleted => Achievements.Count(a => a.Status is AchievementStatus.Completed or AchievementStatus.CompletedHardcore);
 }
