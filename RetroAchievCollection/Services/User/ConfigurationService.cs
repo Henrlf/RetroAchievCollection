@@ -1,31 +1,25 @@
 ﻿using System;
-using System.Linq;
-using RetroAchievCollection.Data;
+using System.Threading.Tasks;
 using RetroAchievCollection.Models;
+using RetroAchievCollection.Repositories;
 
 namespace RetroAchievCollection.Services.User;
 
 public class ConfigurationService : BaseService
 {
-    public void SaveConfigurations(string UserName, string ApiKey)
+    public async Task SaveConfigurations(string UserName, string ApiKey)
     {
         if (string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(ApiKey))
         {
             throw new ArgumentException("Username and API Key is required!");
         }
 
-        using var db = new AppDbContext();
-        ConfigurationModel configurationModel = db.Configuration.First();
+        ConfigurationRepository configurationRepository = new ConfigurationRepository();
+        
+        ConfigurationModel configurationModel = await configurationRepository.GetConfiguration();
         configurationModel.UserName = UserName;
         configurationModel.ApiKey = ApiKey;
 
-        db.Update(configurationModel);
-        db.SaveChanges();
-    }
-
-    public ConfigurationModel getConfigurationModel()
-    {
-        using var db = new AppDbContext();
-        return db.Configuration.First();
+        await configurationRepository.UpdateConfiguration(configurationModel);
     }
 }

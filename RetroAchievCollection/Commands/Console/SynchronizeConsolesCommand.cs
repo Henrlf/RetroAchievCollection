@@ -1,25 +1,22 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using RetroAchievCollection.Repositories;
 using RetroAchievCollection.RetroAchievements.Services;
 using RetroAchievCollection.Services.Console;
-using RetroAchievCollection.Services.User;
 
 namespace RetroAchievCollection.Commands.Console;
 
 public class SynchronizeConsolesCommand
 {
-    public readonly RetroAchievementsService RetroAchievementsService;
     private readonly ConsoleService ConsoleService = new();
-
-    public SynchronizeConsolesCommand(ConfigurationService configurationService)
-    {
-        RetroAchievementsService = new RetroAchievementsService(configurationService.getConfigurationModel());
-    }
 
     public async Task execute()
     {
-        var consolesDto = await RetroAchievementsService.getConsolesAsync(1);
+        ConfigurationRepository configurationRepository = new();
+        RetroAchievementsService retroAchievService = new RetroAchievementsService(await configurationRepository.GetConfiguration());
+
+        var consolesDto = await retroAchievService.getConsolesAsync(1);
         var semaphore = new SemaphoreSlim(5);
 
         await Task.WhenAll(consolesDto.Select(async consoleDto =>

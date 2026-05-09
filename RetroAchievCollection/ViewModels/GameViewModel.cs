@@ -40,7 +40,7 @@ public partial class GameViewModel : BaseViewModel
         {
             _mainVm.ShowLoadingScreen("Synchronizing...");
 
-            SynchronizeConsoleGamesCommand command = new(_mainVm.configurationService)
+            SynchronizeConsoleGamesCommand command = new()
             {
                 ConsoleCodeIntegration = ConsoleCodeIntegration
             };

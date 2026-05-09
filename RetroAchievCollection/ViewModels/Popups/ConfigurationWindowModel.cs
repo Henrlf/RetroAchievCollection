@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Models;
+using RetroAchievCollection.Repositories;
+using RetroAchievCollection.Services.User;
 
 namespace RetroAchievCollection.ViewModels.Popups;
 
@@ -16,24 +21,29 @@ public partial class ConfigurationWindowModel : BaseViewModel
 
     public ConfigurationWindowModel(MainWindowViewModel mainVm) : base(mainVm)
     {
-        LoadValues();
+        Dispatcher.UIThread.InvokeAsync(async () => {await LoadValues();});
     }
 
-    public void LoadValues()
+    public async Task LoadValues()
     {
-        ConfigurationModel configModel = _mainVm.configurationService.getConfigurationModel();
+        ConfigurationRepository configurationRepository = new();
+
+        ConfigurationModel configModel = await configurationRepository.GetConfiguration();
         UserName = configModel.UserName;
         ApiKey = configModel.ApiKey;
     }
 
-    public void SaveConfigurations()
+    [RelayCommand]
+    public async Task SaveConfigurations()
     {
         UserNameHasError = string.IsNullOrWhiteSpace(UserName);
         ApiKeyHasError = string.IsNullOrWhiteSpace(ApiKey);
 
         try
         {
-            _mainVm.configurationService.SaveConfigurations(UserName, ApiKey);
+            ConfigurationService configurationService = new();
+            await configurationService.SaveConfigurations(UserName, ApiKey);
+
             _notificationService?.ShowSuccess("Configurations saved.");
             RequestClose?.Invoke();
         }

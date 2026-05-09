@@ -37,16 +37,16 @@ public class GameService : BaseService
     public async Task<GameModel> SaveGameDto(GameDto gameDto, int consoleCodeintegration)
     {
         GameRepository gameRepository = new();
-
-        using var db = new AppDbContext();
-        ConsoleModel? consoleModel = await db.Consoles.SingleOrDefaultAsync(c => c.CodeIntegration == consoleCodeintegration);
-
+        ConsoleRepository consoleRepository = new();
+        
+        ConsoleModel? consoleModel = await consoleRepository.GetConsoleByCodeIntegration(consoleCodeintegration);
+            
         if (consoleModel == null)
         {
             throw new NullReferenceException("Console does not exist!");
         }
 
-        GameModel? gameModel = await gameRepository.GetByCodeIntegration(gameDto.CodeIntegration, true);
+        GameModel? gameModel = await gameRepository.GetGameByCodeIntegration(gameDto.CodeIntegration, true);
 
         if (gameModel == null)
         {

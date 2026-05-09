@@ -5,8 +5,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using RetroAchievCollection.Repositories;
 using RetroAchievCollection.Services;
-using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.Services.User;
 using RetroAchievCollection.ViewModels.Lists;
 using RetroAchievCollection.ViewModels.Popups;
@@ -16,10 +16,10 @@ namespace RetroAchievCollection.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
-    [ObservableProperty] private object? _currentView;
-    [ObservableProperty] private object? _favoriteGamesView;
-
+    [ObservableProperty] private object? _consolesTab;
+    [ObservableProperty] private object? _favoriteGamesTab;
     // [ObservableProperty] private object? _allGamesView;
+    
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string _textLoading = "Loading...";
 
@@ -39,16 +39,16 @@ public partial class MainWindowViewModel : ObservableObject
     public void ShowConsolesView()
     {
         ConsoleViewCache ??= new ConsoleViewModel(this);
-        CurrentView = ConsoleViewCache;
+        ConsolesTab = ConsoleViewCache;
     }
 
     [RelayCommand]
     public async Task ShowGameView(Guid consoleId)
     {
-        ConsoleService consoleService = new();
-        var consoleModel = await consoleService.GetConsole(consoleId);
+        ConsoleRepository consoleRepository = new();
+        var consoleModel = await consoleRepository.GetConsole(consoleId);
 
-        CurrentView = new GameViewModel(this, consoleId)
+        ConsolesTab = new GameViewModel(this, consoleId)
         {
             ConsoleName = consoleModel != null ? consoleModel.Name : "",
             ConsoleCodeIntegration = consoleModel?.CodeIntegration ?? 0
@@ -58,7 +58,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     public void ShowFavoriteGamesView()
     {
-        FavoriteGamesView = new FavoriteGamesViewModel(this);
+        FavoriteGamesTab = new FavoriteGamesViewModel(this);
     }
 
     public void ShowLoadingScreen(string text)

@@ -55,7 +55,7 @@ public partial class GameCardViewModel : BaseViewModel
         {
             _mainVm.ShowLoadingScreen("Synchronizing...");
 
-            SynchronizeGameCommand command = new(_mainVm.configurationService)
+            SynchronizeGameCommand command = new()
             {
                 GameCodeIntegration = GameModel.CodeIntegration
             };

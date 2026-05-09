@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Console;
 using RetroAchievCollection.Repositories;
 using RetroAchievCollection.Services;
-using RetroAchievCollection.Services.Console;
 using RetroAchievCollection.ViewModels.Cards;
 
 namespace RetroAchievCollection.ViewModels;
@@ -30,7 +29,7 @@ public partial class ConsoleViewModel : BaseViewModel
         {
             _mainVm.ShowLoadingScreen("Synchronizing...");
 
-            SynchronizeConsolesCommand command = new(_mainVm.configurationService);
+            SynchronizeConsolesCommand command = new();
             await command.execute();
 
             await LoadConsoles(SearchTextConsoles);
@@ -69,10 +68,10 @@ public partial class ConsoleViewModel : BaseViewModel
     {
         Consoles.Clear();
 
-        ConsoleService consoleService = new();
+        ConsoleRepository consoleRepository = new();
         GameRepository gameRepository = new();
 
-        var consoleModels = (await consoleService.GetConsoles())
+        var consoleModels = (await consoleRepository.GetConsoles())
             .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
             .OrderBy(a => a.Name)
             .ToList();

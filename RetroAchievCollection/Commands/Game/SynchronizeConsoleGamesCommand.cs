@@ -1,27 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RetroAchievCollection.Models;
-using RetroAchievCollection.RetroAchievements.Dtos;
+using RetroAchievCollection.Repositories;
 using RetroAchievCollection.RetroAchievements.Services;
 using RetroAchievCollection.Services.Game;
-using RetroAchievCollection.Services.User;
 
 namespace RetroAchievCollection.Commands.Game;
 
 public class SynchronizeConsoleGamesCommand
 {
-    private readonly RetroAchievementsService RetroAchievementsService;
     private readonly GameService GameService = new();
 
     public int ConsoleCodeIntegration {get; set;}
-
-    public SynchronizeConsoleGamesCommand(ConfigurationService configurationService)
-    {
-        RetroAchievementsService = new RetroAchievementsService(configurationService.getConfigurationModel());
-    }
 
     public async Task Execute()
     {
@@ -30,7 +22,10 @@ public class SynchronizeConsoleGamesCommand
             throw new ArgumentException("Console Id must be specified!");
         }
 
-        var gamesDto = await RetroAchievementsService.getConsoleGamesAsync(ConsoleCodeIntegration);
+        ConfigurationRepository configurationRepository = new();
+        RetroAchievementsService retroAchievService = new RetroAchievementsService(await configurationRepository.GetConfiguration());
+
+        var gamesDto = await retroAchievService.getConsoleGamesAsync(ConsoleCodeIntegration);
         var semaphore = new SemaphoreSlim(2);
 
         await Task.WhenAll(gamesDto.Select(async simpleGameDto =>
@@ -39,7 +34,7 @@ public class SynchronizeConsoleGamesCommand
 
             try
             {
-                var infoGameDto = await RetroAchievementsService.getGameAndAchievementsAsync(simpleGameDto.CodeIntegration);
+                var infoGameDto = await retroAchievService.getGameAndAchievementsAsync(simpleGameDto.CodeIntegration);
                 GameModel gameModel = await GameService.SaveGameDto(infoGameDto, ConsoleCodeIntegration);
 
                 await GameService.SaveAchievementsDto(infoGameDto.Achievements.Values.ToList(), gameModel);

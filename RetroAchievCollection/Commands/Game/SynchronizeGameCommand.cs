@@ -2,24 +2,18 @@
 using System.Linq;
 using System.Threading.Tasks;
 using RetroAchievCollection.Models;
+using RetroAchievCollection.Repositories;
 using RetroAchievCollection.RetroAchievements.Services;
 using RetroAchievCollection.Services.Game;
-using RetroAchievCollection.Services.User;
 
 namespace RetroAchievCollection.Commands.Game;
 
 public class SynchronizeGameCommand
 {
-    public readonly RetroAchievementsService RetroAchievementsService;
     public readonly GameService GameService = new();
 
     public int GameCodeIntegration {get; set;}
     public GameModel? GameModel {get; protected set;}
-
-    public SynchronizeGameCommand(ConfigurationService configurationService)
-    {
-        RetroAchievementsService = new RetroAchievementsService(configurationService.getConfigurationModel());
-    }
 
     public async Task execute()
     {
@@ -28,7 +22,10 @@ public class SynchronizeGameCommand
             throw new ArgumentException("Game Id must be specified!");
         }
 
-        var gameDto = await RetroAchievementsService.getGameAndAchievementsAsync(GameCodeIntegration);
+        ConfigurationRepository configurationRepository = new();
+        RetroAchievementsService retroAchievService = new RetroAchievementsService(await configurationRepository.GetConfiguration());
+        
+        var gameDto = await retroAchievService.getGameAndAchievementsAsync(GameCodeIntegration);
 
         GameModel = await GameService.SaveGameDto(gameDto, gameDto.ConsoleId);
 

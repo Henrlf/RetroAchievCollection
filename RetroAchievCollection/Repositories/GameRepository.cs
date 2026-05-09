@@ -10,7 +10,7 @@ namespace RetroAchievCollection.Repositories;
 
 public class GameRepository
 {
-    public async Task<GameModel?> GetByCodeIntegration(int codeIntegration, bool includeAchievements = false)
+    public async Task<GameModel?> GetGameByCodeIntegration(int codeIntegration, bool includeAchievements = false)
     {
         using var db = new AppDbContext();
         return await BuildQuery(db, includeAchievements)
