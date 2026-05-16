@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using RetroAchievCollection.Repositories;
@@ -15,14 +16,15 @@ public partial class FavoriteGamesViewModel : GameViewModel
         Games.Clear();
         GameRepository gameRepository = new();
 
-        var gameModels = (await gameRepository.GetFavoriteGames(true))
-            .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(g => g.Name)
-            .ToList();
+        var gameModelCount = await gameRepository.GetFavoriteGamesCount(searchText);
+        var gameModels = await gameRepository.GetFavoriteGamesPaged(CurrentPage, PageSize, searchText, true);
 
-        foreach (var gameModel in gameModels)
-        {
-            Games.Add(new GameCardViewModel(_mainVm, gameModel));
-        }
+        TotalPages = Math.Max(1, (int)Math.Ceiling(gameModelCount / (double)PageSize));
+
+        var viewModels = await Task.Run(() => gameModels
+            .Select(g => new GameCardViewModel(_mainVm, g))
+            .ToList());
+
+        Games = new ObservableCollection<GameCardViewModel>(viewModels);
     }
 }

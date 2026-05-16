@@ -2,11 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroAchievCollection.Commands.Game;
@@ -45,7 +47,7 @@ public partial class GameCardViewModel : BaseViewModel
         GameModel = gameModel;
 
         LoadValues(gameModel);
-        LoadAchievements(gameModel);
+        Dispatcher.UIThread.InvokeAsync(async () => {await LoadAchievements(gameModel);});
     }
 
     [RelayCommand]
@@ -72,7 +74,7 @@ public partial class GameCardViewModel : BaseViewModel
             GameModel = gameModel;
 
             LoadValues(gameModel);
-            LoadAchievements(gameModel);
+            await LoadAchievements(gameModel);
 
             _notificationService?.ShowSuccess("Game achievements synchronized.");
         }
@@ -218,13 +220,14 @@ public partial class GameCardViewModel : BaseViewModel
         }
     }
 
-    private void LoadAchievements(GameModel gameModel)
+    private async Task LoadAchievements(GameModel gameModel)
     {
         Achievements.Clear();
 
-        foreach (var achievementModel in gameModel.Achievements)
-        {
-            Achievements.Add(new AchievementCardViewModel(_mainVm, achievementModel));
-        }
+        var achievementViewModels = await Task.Run(() => gameModel.Achievements
+            .Select(g => new AchievementCardViewModel(_mainVm, g))
+            .ToList());
+
+        Achievements = new ObservableCollection<AchievementCardViewModel>(achievementViewModels);
     }
 }

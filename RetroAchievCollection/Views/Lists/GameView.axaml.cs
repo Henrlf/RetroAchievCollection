@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 
-namespace RetroAchievCollection.Views;
+namespace RetroAchievCollection.Views.Lists;
 
 public partial class GameView : UserControl
 {

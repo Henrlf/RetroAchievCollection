@@ -10,9 +10,9 @@ using RetroAchievCollection.Repositories;
 using RetroAchievCollection.Services;
 using RetroAchievCollection.ViewModels.Cards;
 
-namespace RetroAchievCollection.ViewModels;
+namespace RetroAchievCollection.ViewModels.Lists;
 
-public partial class GameViewModel : BaseViewModel
+public partial class GameViewModel : PagedViewModel
 {
     [ObservableProperty] private ObservableCollection<GameCardViewModel> _games = new();
     [ObservableProperty] private string _searchTextGames = "";
@@ -20,6 +20,8 @@ public partial class GameViewModel : BaseViewModel
     public Guid ConsoleId {get; set;}
     public int ConsoleCodeIntegration {get; set;}
     public string ConsoleName {get; set;} = "";
+    
+    protected override async Task LoadViewData() => await LoadGames(SearchTextGames);
 
     public GameViewModel(MainWindowViewModel mainVm, Guid consoleId) : base(mainVm)
     {
@@ -47,7 +49,7 @@ public partial class GameViewModel : BaseViewModel
 
             await command.Execute();
 
-            await LoadGames();
+            await LoadGames(SearchTextGames);
 
             _notificationService?.ShowSuccess("Console games synchronized.");
         }
@@ -67,19 +69,12 @@ public partial class GameViewModel : BaseViewModel
     {
         try
         {
-            // TODO: SEE ABOUT THE LOADING SCREEN
-            _mainVm.ShowLoadingScreen("Loading...");
-
             await LoadGames(SearchTextGames);
         }
         catch (Exception ex)
         {
             BaseService.SaveError(ex.ToString());
             _notificationService?.ShowError(ex.Message);
-        }
-        finally
-        {
-            _mainVm.HideLoadingScreen();
         }
     }
 
@@ -88,15 +83,15 @@ public partial class GameViewModel : BaseViewModel
         Games.Clear();
         GameRepository gameRepository = new();
 
-        var gameModels = (await gameRepository.GetConsoleGames(ConsoleId, true))
-            .Where(n => n.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-            .OrderByDescending(a => a.IsFavorite)
-            .ThenBy(a => a.Name)
-            .ToList();
+        var gameModelCount = await gameRepository.GetConsoleGamesCount(ConsoleId, searchText);
+        var gameModels = await gameRepository.GetConsoleGamesPaged(ConsoleId, CurrentPage, PageSize, searchText, true);
 
-        foreach (var gameModel in gameModels)
-        {
-            Games.Add(new GameCardViewModel(_mainVm, gameModel));
-        }
+        TotalPages = Math.Max(1, (int)Math.Ceiling(gameModelCount / (double)PageSize));
+
+        var viewModels = await Task.Run(() => gameModels
+            .Select(g => new GameCardViewModel(_mainVm, g))
+            .ToList());
+
+        Games = new ObservableCollection<GameCardViewModel>(viewModels);
     }
 }

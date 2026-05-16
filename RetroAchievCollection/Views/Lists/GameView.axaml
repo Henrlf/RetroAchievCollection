@@ -2,20 +2,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels"
+             xmlns:vm="clr-namespace:RetroAchievCollection.ViewModels.Lists"
              xmlns:components="clr-namespace:RetroAchievCollection.Views.Cards"
              mc:Ignorable="d"
-             x:Class="RetroAchievCollection.Views.GameView"
+             x:Class="RetroAchievCollection.Views.Lists.GameView"
              x:DataType="vm:GameViewModel"
              x:CompileBindings="True">
 
-    <Grid RowDefinitions="1, Auto, *">
+    <Grid RowDefinitions="1, Auto, *, Auto">
         <Separator Grid.Row="0" Margin="10 0" />
 
         <Grid Grid.Row="1"
               ColumnDefinitions="*, Auto, *"
               Margin="10 6">
-            
+
             <!-- SEE CONSOLES BUTTON -->
             <Border Grid.Column="0"
                     Classes="border-button"
@@ -99,5 +99,42 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <Border Grid.Row="3" Classes="border-pagination">
+            <Grid ColumnDefinitions="40, Auto, 40">
+
+                <!-- LEFT ARROW -->
+                <Button Grid.Column="0" Classes="base-button"
+                        Command="{Binding PreviousPage}">
+                        <!-- IsEnabled="{Binding HasPreviousPage}"> -->
+                    <PathIcon Data="{StaticResource left_arrow}" Foreground="White" />
+                </Button>
+
+                <!-- PAGE COUNTER -->
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Orientation="Horizontal"
+                            Margin="3 0">
+                    <StackPanel.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="FontSize" Value="18" />
+                        </Style>
+                    </StackPanel.Styles>
+
+                    <TextBlock Text="{Binding CurrentPage}" />
+                    <TextBlock Text=" / " />
+                    <TextBlock Text="{Binding TotalPages}" />
+                </StackPanel>
+
+                <!-- RIGHT ARROW -->
+                <Button Grid.Column="2" Classes="base-button"
+                        Command="{Binding NextPage}">
+                        <!-- IsEnabled="{Binding HasNextPage}"> -->
+                    <PathIcon Data="{StaticResource right_arrow}" Foreground="White" />
+                </Button>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

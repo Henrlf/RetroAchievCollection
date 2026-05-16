@@ -9,7 +9,7 @@
              x:DataType="vm:FavoriteGamesViewModel"
              x:CompileBindings="True">
 
-    <Grid RowDefinitions="1, Auto, *">
+    <Grid RowDefinitions="1, Auto, *, Auto">
         <Separator Grid.Row="0" Margin="10 0" />
 
         <Grid Grid.Row="1"
@@ -68,5 +68,43 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <!-- PAGINATION -->
+        <Border Grid.Row="3" Classes="border-pagination">
+            <Grid ColumnDefinitions="40, Auto, 40">
+
+                <!-- LEFT ARROW -->
+                <Button Grid.Column="0" Classes="base-button"
+                        Command="{Binding PreviousPage}">
+                    <!-- IsEnabled="{Binding HasPreviousPage}"> -->
+                    <PathIcon Data="{StaticResource left_arrow}" Foreground="White" />
+                </Button>
+
+                <!-- PAGE COUNTER -->
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Orientation="Horizontal"
+                            Margin="3 0">
+                    <StackPanel.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="FontSize" Value="18" />
+                        </Style>
+                    </StackPanel.Styles>
+
+                    <TextBlock Text="{Binding CurrentPage}" />
+                    <TextBlock Text=" / " />
+                    <TextBlock Text="{Binding TotalPages}" />
+                </StackPanel>
+
+                <!-- RIGHT ARROW -->
+                <Button Grid.Column="2" Classes="base-button"
+                        Command="{Binding NextPage}">
+                    <!-- IsEnabled="{Binding HasNextPage}"> -->
+                    <PathIcon Data="{StaticResource right_arrow}" Foreground="White" />
+                </Button>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
